@@ -1,0 +1,31 @@
+<html>
+  <head>
+    <script type="text/javascript" src="./javascript/jquery-1.7.1.min.js"></script>
+    <script type="text/javascript" src="./javascript/jquery.daterangepicker.js"></script>
+    <link type="text/css" rel="stylesheet" media="all" href="./stylesheet/jquery.daterangepicker.css"></script>
+  </head>
+  <body>
+    from: <input type="text" id="daterange_from" value="2012/01/12" />
+    &nbsp;-&nbsp;
+    to: <input type="text" id="daterange_to" />
+    &nbsp;
+    <a href="#" id="datetimerangepicker_icon"><img src="./image/calendar.png" /></a>
+
+    <div id="daterangepicker"></div>
+    <script type="text/javascript">
+      <!--
+      $("#datetimerangepicker_icon").click(function() {
+        $("#daterangepicker").daterangepickerToggle({
+          daterangeFrom: "daterange_from",
+          daterangeTo: "daterange_to",
+          presets: [
+            {label: "1月",  range: "2012/01/01-2012/01/31"},
+            {label: "2月",  range: "2012/02/01-2012/02/29"},
+            {label: "今年", range: "2012/01/01-2012/12/31"}
+          ]
+        });
+      });
+      -->
+    </script>
+  </body>
+</html>
