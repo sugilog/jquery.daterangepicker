@@ -1,6 +1,8 @@
 table.daterangepicker_widget {
   background-color: #ffffff;
   margin: 5px;
+  border: 1px solid #cccccc;
+  border-radius: 5px;
 }
 td.daterangepicker_widget_presets {
   min-width: 100px;
@@ -32,7 +34,7 @@ tr.daterangepicker_preset_header td {
   text-align: center;
   margin: 2px;
   height: 30px;
-  border-radius: 8px;
+  border-radius: 3px;
 }
 td.daterangepicker_current_month,
 tr.daterangepicker_preset_header td {
