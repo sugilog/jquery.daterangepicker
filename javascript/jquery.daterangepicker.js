@@ -1,3 +1,7 @@
+/*!
+ * jquery.daterangepicker
+ * Copyright 2012, TAKAYUKI SUGITA (sugilog)
+*/
 (function($) {
 var daterangepicker = {}
 daterangepicker.weekdays = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"]
