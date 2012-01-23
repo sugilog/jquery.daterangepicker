@@ -87,6 +87,7 @@ td.current_range {
   background-color: #ffc966;
 }
 td.daterangepicker_preset_item {
+  height: 20px;
   text-align: center;
   border: 1px solid #cccccc;
 }
