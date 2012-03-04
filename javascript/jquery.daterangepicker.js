@@ -24,6 +24,7 @@ $.fn.daterangepicker = function(options) {
 
       return $("<table>")
         .addClass("daterangepicker_calendar")
+        // FIXME: do not keep year month as class
         .addClass(year + "_" + month)
         .append(calendar.row.header(year, month))
         .append(calendar.row.dayname())
@@ -33,12 +34,14 @@ $.fn.daterangepicker = function(options) {
       header: function(year, month) {
         return $("<tr>").addClass("daterangepicker_month")
           .append($("<td>").addClass("daterangepicker_previous_month").append(this.link("<<")))
+          // TODO: year month selector
           .append($("<td>").addClass("daterangepicker_current_month").prop("colspan", 5).text(year + "/" + month))
           .append($("<td>").addClass("daterangepicker_next_month").append(this.link(">>")));
       },
       dayname: function() {
         var row = $("<tr>").addClass("daterangepicker_dayname");
         $.each(daterangepicker.weekdays, function(idx, day){
+          // FIXME: do not keep day as class
           row.append($("<td>").addClass("daterangepicker_" + day).text(day));
         });
         return row;
@@ -56,6 +59,7 @@ $.fn.daterangepicker = function(options) {
 
           var d = $("<td>")
           if (dateUtil.inMonth(date, year, month)) {
+            // FIXME: do not keep day as class
             d.addClass("daterangepicker_date").prop("id", "date_" + type + "_" + dateUtil.format(date, "_"));
             d.append(calendar.row.link(date.getDate()));
           }
@@ -75,6 +79,7 @@ $.fn.daterangepicker = function(options) {
       }
     },
     setCurrent: function(newDate, type) {
+      // FIXME: change date judging
       if (/([0-9]+)_([0-9]+)/.test($("." + daterangepickerWrapper[type] + " table.daterangepicker_calendar").prop("class"))) {
         var year  = parseInt(RegExp.$1);
         var month = parseInt(RegExp.$2);
@@ -84,14 +89,17 @@ $.fn.daterangepicker = function(options) {
         }
       }
 
+      // FIXME: change date judging
       $("#date_" + type + "_" + dateUtil.format(daterange[type], "_")).removeClass("current_selection");
       daterange[type] = newDate;
+      // FIXME: change date judging
       $("#date_" + type + "_" + dateUtil.format(daterange[type], "_")).addClass("current_selection");
       $("#" + daterangeFields[type]).val(dateUtil.format(daterange[type], "/"));
     },
     setRange: function() {
       $.each(["from", "to"], function(idx, type) {
         jQuery("." + daterangepickerWrapper[type]).find("td.daterangepicker_date").each(function(idx, td) {
+          // FIXME: change date judging
           if (/^date_(from|to)_([0-9_]+)$/.test(td.id)) {
             var tdDate = new Date(RegExp.$2.replace(/_/g, "/"));
 
@@ -223,6 +231,7 @@ $.fn.daterangepicker = function(options) {
       });
 
       $(".daterangepicker_preset_item a").live("click", function() {
+          // FIXME: change date judging
         if (/range_([0-9_\/]*)-([0-9_\/]*)/.test($(this).closest("td").prop("class"))) {
           var range = {
             from: new Date(RegExp.$1),
@@ -282,6 +291,7 @@ $.fn.daterangepicker = function(options) {
 
 
   $(".daterangepicker_date a").live("click", function() {
+    // FIXME: change date judging
     if ((/^date_(from|to)_([0-9_]+)$/).test($(this).closest("td").prop("id"))) {
       var type = RegExp.$1;
       var date = dateUtil.parse(RegExp.$2);
