@@ -33,7 +33,7 @@ tr.daterangepicker_preset_header td {
   background-color: #eeeeee;
   text-align: center;
   margin: 2px;
-  height: 30px;
+/*  height: 30px;*/
   border-radius: 3px;
 }
 td.daterangepicker_current_month,
@@ -59,7 +59,7 @@ td.daterangepicker_Sa {
   text-align: center;
   border: none;
   margin: 2px;
-  height: 20px;
+/*  height: 20px;*/
 }
 tr.daterangepicker_week {
 }
@@ -67,7 +67,7 @@ td.daterangepicker_date {
   text-align: right;
   border: 1px solid #cccccc;
   margin: 2px;
-  height: 20px;
+/*  height: 20px;*/
 }
 td.daterangepicker_previous_month a,
 td.daterangepicker_next_month a,
