@@ -3,23 +3,33 @@
  * Copyright 2012, TAKAYUKI SUGITA (sugilog)
 */
 (function($) {
-var daterangepicker = {}
-daterangepicker.weekdays = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"]
+var daterangepicker = {
+  weekdays: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
+  fields: {
+    from: "#daterange_from",
+    to:   "#daterange_to"
+  },
+  exists: function() {
+    return (typeof $("table.daterangepicker_widget").get(0) !== "undefined");
+  }
+};
 
 $.fn.daterangepickerOpen = function(options) {
   $(this).daterangepicker(options);
-}
+};
 $.fn.daterangepickerClose = function() {
-  $(this).html("");
-}
+  $(this).find("table.daterangepicker_widget").remove();
+  $(daterangepicker.fields.from).off("blur.daterangepicker");
+  $(daterangepicker.fields.to).off("blur.daterangepicker");
+};
 $.fn.daterangepickerToggle = function(options) {
-  if ($(this).html() === "") {
-    $(this).daterangepickerOpen(options);
-  }
-  else {
+  if (daterangepicker.exists()) {
     $(this).daterangepickerClose();
   }
-}
+  else {
+    $(this).daterangepickerOpen(options);
+  }
+};
 $.fn.daterangepicker = function(options) {
   var calendar = {
     create: function(date, type) {
@@ -99,7 +109,7 @@ $.fn.daterangepicker = function(options) {
       daterange[type] = newDate;
       $("#date_" + type + "_" + dateUtil.format(daterange[type], "_")).addClass("current_selection");
       // TODO: date format
-      $("#" + daterangeFields[type]).val(dateUtil.format(daterange[type], "/"));
+      $(daterangepicker.fields[type]).val(dateUtil.format(daterange[type], "/"));
     },
     setRange: function() {
       $.each(["from", "to"], function(idx, type) {
@@ -253,6 +263,7 @@ $.fn.daterangepicker = function(options) {
         }
       });
 
+      // Set Event For PresetItems
       $(".daterangepicker_preset_item a").live("click", function() {
         var preset = $(this).closest("td");
 
@@ -273,10 +284,8 @@ $.fn.daterangepicker = function(options) {
     options = {};
   }
 
-  var daterangeFields = {
-    from: (options.daterangeFrom || "daterange_from"),
-    to:   (options.daterangeTo   || "daterange_to")
-  };
+  daterangepicker.fields.from = options.daterangeFrom || daterangepicker.fields.from;
+  daterangepicker.fields.to   = options.daterangeTo   || daterangepicker.fields.to;
 
   var daterangepickerWrapper = {
     from: "daterangepicker_widget_calendar_from",
@@ -286,12 +295,26 @@ $.fn.daterangepicker = function(options) {
   var daterange = {};
 
   $.each(["from", "to"], function(idx, type) {
-    if ($("#" + daterangeFields[type]).val() === "") {
+    if ($(daterangepicker.fields[type]).val() === "") {
       daterange[type] = new Date();
     }
     else {
-      daterange[type] = new Date($("#" + daterangeFields[type]).val());
+      daterange[type] = new Date($(daterangepicker.fields[type]).val());
     }
+
+    // Set Event For InputFields
+    $(daterangepicker.fields[type]).on("blur.daterangepicker", function() {
+      if (daterangepicker.exists()) {
+        console.log(this);
+
+        var date = dateUtil.parse($(this).val());
+
+        if (!isNaN(date.getDay())) {
+          calendar.setCurrent(date, type);
+          calendar.setRange()
+        }
+      }
+    })
   });
 
   // Initialize Calendar
@@ -313,7 +336,7 @@ $.fn.daterangepicker = function(options) {
     var td = $(this).closest("td")
     var type = td.data().daterangeType;
     var date = dateUtil.init(td.data().daterangeDate);
-    $("#" + daterangeFields[type]).val(dateUtil.format(date));
+    $(daterangepicker.fields[type]).val(dateUtil.format(date));
 
     calendar.setCurrent(date, type);
     calendar.setRange()
