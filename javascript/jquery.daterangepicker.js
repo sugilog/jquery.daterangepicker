@@ -266,7 +266,7 @@ $.fn.daterangepicker = function(options) {
       });
 
       // Set Event For PresetItems
-      $(".daterangepicker_preset_item a").live("click", function() {
+      $(".daterangepicker_preset_item a").live("click.daterangepicker", function() {
         var preset = $(this).closest("td");
 
         $.each(["from", "to"], function(idx, type) {
@@ -356,7 +356,7 @@ $.fn.daterangepicker = function(options) {
   calendar.setRange();
 
   // Set Event
-  $(".daterangepicker_date").live("click", function() {
+  $(".daterangepicker_date").live("click.daterangepicker", function() {
     var type = $(this).data().daterangeType;
     var date = dateUtil.init($(this).data().daterangeDate);
     $(daterangepicker.fields[type]).val(dateUtil.format(date));
@@ -367,7 +367,7 @@ $.fn.daterangepicker = function(options) {
     return false;
   });
 
-  $(".daterangepicker_previous_month").live("click", function() {
+  $(".daterangepicker_previous_month").live("click.daterangepicker", function() {
     var wrapper = $(this).closest("div");
     var type = wrapper.data().daterangeType;
     var currentMonth = wrapper.find(".daterangepicker_current_month").text();
@@ -380,7 +380,7 @@ $.fn.daterangepicker = function(options) {
     return false;
   })
 
-  $(".daterangepicker_next_month").live("click", function() {
+  $(".daterangepicker_next_month").live("click.daterangepicker", function() {
     var wrapper = $(this).closest("div");
     var type = wrapper.data().daterangeType;
     var currentMonth = wrapper.find(".daterangepicker_current_month").text();
