@@ -356,10 +356,9 @@ $.fn.daterangepicker = function(options) {
   calendar.setRange();
 
   // Set Event
-  $(".daterangepicker_date a").live("click", function() {
-    var td = $(this).closest("td")
-    var type = td.data().daterangeType;
-    var date = dateUtil.init(td.data().daterangeDate);
+  $(".daterangepicker_date").live("click", function() {
+    var type = $(this).data().daterangeType;
+    var date = dateUtil.init($(this).data().daterangeDate);
     $(daterangepicker.fields[type]).val(dateUtil.format(date));
 
     calendar.setCurrent(date, type);
@@ -368,7 +367,7 @@ $.fn.daterangepicker = function(options) {
     return false;
   });
 
-  $(".daterangepicker_previous_month a").live("click", function() {
+  $(".daterangepicker_previous_month").live("click", function() {
     var wrapper = $(this).closest("div");
     var type = wrapper.data().daterangeType;
     var currentMonth = wrapper.find(".daterangepicker_current_month").text();
@@ -381,10 +380,10 @@ $.fn.daterangepicker = function(options) {
     return false;
   })
 
-  $(".daterangepicker_next_month a").live("click", function() {
+  $(".daterangepicker_next_month").live("click", function() {
     var wrapper = $(this).closest("div");
     var type = wrapper.data().daterangeType;
-    var currentMonth = $(this).closest("div").find(".daterangepicker_current_month").text();
+    var currentMonth = wrapper.find(".daterangepicker_current_month").text();
     // FIXME
     var nextMonth = dateUtil.nextMonth(currentMonth.split("/")[0], currentMonth.split("/")[1]);
     wrapper.html(calendar.create(nextMonth, type));
