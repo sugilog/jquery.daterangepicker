@@ -211,7 +211,7 @@ $.fn.daterangepicker = function(options) {
       if (d < 10) { d = "0" + d.toString(); }
 
       return [y, m, d].join(separator || "/");
-    },
+    }
   };
 
   var presets = {
