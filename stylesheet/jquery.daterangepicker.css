@@ -1,3 +1,6 @@
+a#daterangepicker_icon img {
+  border-style: none;
+}
 table.daterangepicker_widget {
   background-color: #ffffff;
   margin: 5px;
@@ -27,11 +30,15 @@ table.daterangepicker_extra_item {
   width: 100%;
 }
 tr.daterangepicker_month,
+tr.daterangepicker_year,
 tr.daterangepicker_preset_header {
 }
 td.daterangepicker_previous_month,
 td.daterangepicker_next_month,
+td.daterangepicker_previous_year,
+td.daterangepicker_next_year,
 td.daterangepicker_current_month,
+td.daterangepicker_current_year,
 tr.daterangepicker_preset_header td {
   background-color: #eeeeee;
   text-align: center;
@@ -40,12 +47,14 @@ tr.daterangepicker_preset_header td {
   border-radius: 3px;
 }
 td.daterangepicker_current_month,
+td.daterangepicker_current_year,
 tr.daterangepicker_preset_header td {
-  background-color: #eeeeee;
   border: none;
 }
 td.daterangepicker_previous_month,
-td.daterangepicker_next_month {
+td.daterangepicker_next_month,
+td.daterangepicker_previous_year,
+td.daterangepicker_next_year {
   background-color: #ffffff;
   border: 1px solid #cccccc;
 }
@@ -66,15 +75,24 @@ td.daterangepicker_Sa {
 }
 tr.daterangepicker_week {
 }
-td.daterangepicker_date {
+td.daterangepicker_date,
+td.daterangepicker_month_select {
   text-align: right;
   border: 1px solid #cccccc;
   margin: 2px;
   height: 20px;
 }
+td.daterangepicker_month_select {
+  width: 25px;
+  text-align: center;
+}
 td.daterangepicker_previous_month a,
 td.daterangepicker_next_month a,
+td.daterangepicker_current_month a,
+td.daterangepicker_previous_year a,
+td.daterangepicker_next_year a,
 td.daterangepicker_date a,
+td.daterangepicker_month_select a,
 td.daterangepicker_preset_item a,
 td.daterangepicker_close_button a {
   text-decoration: none;
@@ -82,14 +100,22 @@ td.daterangepicker_close_button a {
 }
 td.daterangepicker_previous_month,
 td.daterangepicker_next_month,
+td.daterangepicker_current_month,
+td.daterangepicker_previous_year,
+td.daterangepicker_next_year,
 td.daterangepicker_date,
+td.daterangepicker_month_select,
 td.daterangepicker_preset_item,
 td.daterangepicker_close_button {
   cursor: pointer;
 }
 td.daterangepicker_previous_month:hover,
 td.daterangepicker_next_month:hover,
+td.daterangepicker_current_month:hover,
+td.daterangepicker_previous_year:hover,
+td.daterangepicker_next_year:hover,
 td.daterangepicker_date:hover,
+td.daterangepicker_month_select:hover,
 td.daterangepicker_preset_item:hover,
 td.daterangepicker_close_button:hover {
   background-color: #add8e6;

@@ -5,6 +5,7 @@
 (function($) {
 var daterangepicker = {
   weekdays: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
+  months: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
   fields: {
     from: "#daterange_from",
     to:   "#daterange_to"
@@ -33,7 +34,7 @@ $.fn.daterangepickerToggle = function(options) {
 $.fn.daterangepicker = function(options) {
   var calendar = {
     create: function(date, type) {
-      var year  = date.getYear() + 1900;
+      var year  = date.getFullYear();
       var month = date.getMonth() + 1;
 
       return $("<table>")
@@ -48,7 +49,7 @@ $.fn.daterangepicker = function(options) {
         return $("<tr>").addClass("daterangepicker_month")
           .append($("<td>").addClass("daterangepicker_previous_month").append(this.link("<<")))
           // TODO: year month selector
-          .append($("<td>").addClass("daterangepicker_current_month").prop("colspan", 5).text(year + "/" + month))
+          .append($("<td>").addClass("daterangepicker_current_month").prop("colspan", 5).append(this.link(year + "/" + month)))
           .append($("<td>").addClass("daterangepicker_next_month").append(this.link(">>")));
       },
       dayname: function() {
@@ -100,7 +101,7 @@ $.fn.daterangepicker = function(options) {
       currentDate = $("." + daterangepickerWrapper[type] + " table.daterangepicker_calendar").data().daterangeDate;
 
       if (options.switchCalendar) {
-        if (newDate.getYear() + 1900 !== currentDate.year || newDate.getMonth() + 1 !== currentDate.month) {
+        if (newDate.getFullYear() !== currentDate.year || newDate.getMonth() + 1 !== currentDate.month) {
           $("." + daterangepickerWrapper[type]).html(calendar.create(newDate, type));
         }
       }
@@ -124,6 +125,54 @@ $.fn.daterangepicker = function(options) {
           }
         });
       });
+    }
+  };
+
+  var monthSelector = {
+    create: function(year, type) {
+      return $("<table>")
+        .addClass("daterangepicker_calendar")
+        .append(monthSelector.row.header(year))
+        .append(monthSelector.row.months(year, type))
+        .data("daterangeDate", {year: year});
+    },
+    row: {
+      header: function(year, month) {
+        return $("<tr>").addClass("daterangepicker_year")
+          .append($("<td>").addClass("daterangepicker_previous_year").append(this.link("<<")))
+          .append($("<td>").addClass("daterangepicker_current_year").prop("colspan", 2).text(year))
+          .append($("<td>").addClass("daterangepicker_next_year").append(this.link(">>")));
+      },
+      months: function(year, type) {
+        var monthRows = new Array();
+        var row = -1;
+
+        $.each(daterangepicker.months, function(idx, month) {
+          if (idx % 4 === 0) {
+            row++;
+            monthRows[row] = $("<tr>").addClass("daterangepicker_months_row");
+          }
+
+          var d = $("<td>")
+          d.addClass("daterangepicker_month_select")
+            .prop("id", "month_" + type + "_" + (idx + 1))
+            .data("daterangeDate", {year: year, month: idx + 1})
+            .data("daterangeType", type);
+          d.append(monthSelector.row.link(month));
+
+          monthRows[row].append(d);
+        })
+
+        var months = $("<tbody>");
+        for (var i = 0; i < monthRows.length; i++) {
+          months.append(monthRows[i]);
+        }
+
+        return months;
+      },
+      link: function(text) {
+        return $("<a>").prop("href", "#").css({display: "block"}).text(text);
+      }
     }
   };
 
@@ -199,7 +248,7 @@ $.fn.daterangepicker = function(options) {
       return base;
     },
     inMonth: function(date, year, month) {
-      return (date.getYear() + 1900) === year && (date.getMonth() + 1) === month;
+      return date.getFullYear() === year && (date.getMonth() + 1) === month;
     },
     inRange: function(baseDate, fromDate, toDate) {
       return fromDate.getTime() <= baseDate.getTime() && toDate.getTime() >= baseDate.getTime();
@@ -215,13 +264,13 @@ $.fn.daterangepicker = function(options) {
       else {
         var year = year_or_set.year;
         month = year_or_set.month - 1;
-        day = year_or_set.day;
+        day = year_or_set.day || 1;
       }
 
       return new Date(year, month, day);
     },
     format: function(date, separator) {
-      y = (date.getYear() + 1900).toString();
+      y = date.getFullYear().toString();
       m = (date.getMonth() + 1).toString();
       d = date.getDate().toString();
 
@@ -355,7 +404,7 @@ $.fn.daterangepicker = function(options) {
   calendar.setCurrent(daterange.to, "to");
   calendar.setRange();
 
-  // Set Event
+  // Set Events For Date
   $(".daterangepicker_date").live("click.daterangepicker", function() {
     var type = $(this).data().daterangeType;
     var date = dateUtil.init($(this).data().daterangeDate);
@@ -390,6 +439,46 @@ $.fn.daterangepicker = function(options) {
     calendar.setCurrent(daterange[type], type, {switchCalendar: false});
     calendar.setRange()
 
+    return false;
+  })
+
+  // Set Events For Month
+  $(".daterangepicker_current_month").live("click.daterangepicker", function() {
+    var wrapper = $(this).closest("div");
+    var type = wrapper.data().daterangeType;
+    var current = wrapper.find(".daterangepicker_calendar").data().daterangeDate;
+
+    wrapper.html(monthSelector.create(current.year, type));
+    return false;
+  });
+
+  $(".daterangepicker_month_select").live("click.daterangepicker", function() {
+    var wrapper = $(this).closest("div");
+    var type = $(this).data().daterangeType;
+    var date = dateUtil.init($(this).data().daterangeDate);
+
+    wrapper.html(calendar.create(date, type));
+    calendar.setCurrent(daterange[type], type, {switchCalendar: false});
+    calendar.setRange()
+
+    return false;
+  });
+
+  $(".daterangepicker_previous_year").live("click.daterangepicker", function() {
+    var wrapper = $(this).closest("div");
+    var type = wrapper.data().daterangeType;
+    var current = wrapper.find(".daterangepicker_calendar").data().daterangeDate;
+
+    wrapper.html(monthSelector.create((current.year - 1), type));
+    return false;
+  })
+
+  $(".daterangepicker_next_year").live("click.daterangepicker", function() {
+    var wrapper = $(this).closest("div");
+    var type = wrapper.data().daterangeType;
+    var current = wrapper.find(".daterangepicker_calendar").data().daterangeDate;
+
+    wrapper.html(monthSelector.create((current.year + 1), type));
     return false;
   })
 };
