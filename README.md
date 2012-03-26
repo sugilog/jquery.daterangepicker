@@ -25,12 +25,12 @@ sample:
       <link type="text/css" rel="stylesheet" media="all" href="./stylesheet/jquery.daterangepicker.css"></script>
     </head>
     <body>
-      from: <input type="text" id="daterange_from" value="2012/01/12" />
+      from <input type="text" id="daterange_from" value="2012/01/12" />
       &nbsp;-&nbsp;
-      to: <input type="text" id="daterange_to" />
+      to <input type="text" id="daterange_to" />
       &nbsp;
       <a href="#" id="datetimerangepicker_icon"><img src="./image/calendar.png" /></a>
-  
+      
       <div id="daterangepicker"></div>
       <br />
       <span>click calendar icon to open calendar widget</span>
