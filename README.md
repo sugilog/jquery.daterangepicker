@@ -20,7 +20,7 @@ Example
 - input#daterange_from and input#daterange_to
 - div#daterangepicker
 
-sample code:
+JavaScript:
 
   $("#datetimerangepicker_icon").click(function() {
     $("#daterangepicker").daterangepickerToggle({
