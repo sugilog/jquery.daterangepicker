@@ -340,7 +340,7 @@ $.fn.daterangepicker = function(options) {
   $(this).append(
     $("<table>")
       .addClass("daterangepicker_widget")
-      .css({position: "absolute", top: 0, left: 0})
+      .css(options.display === "fixed" ? {} : {position: "absolute", top: 0, left: 0})
       .append(
         $("<tr>")
           .append($("<td>").css({verticalAlign: "top"}).prop("rowspan", 2).append($("<div>").addClass("daterangepicker_widget_calendar_from").append(calendar.create(daterange.from, "from")).data("daterangeType", "from")))
