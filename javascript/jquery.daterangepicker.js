@@ -340,7 +340,7 @@ $.fn.daterangepicker = function(options) {
         )
       );
 
-      $(".daterangepicker_close_button a").live("click.daterangepicker", function(){
+      $(".daterangepicker_close_button").live("click.daterangepicker", function(){
         _caller.daterangepickerClose();
       });
 
