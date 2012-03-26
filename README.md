@@ -22,18 +22,18 @@ Example
 
 JavaScript:
 
-  $("#datetimerangepicker_icon").click(function() {
-    $("#daterangepicker").daterangepickerToggle({
-      daterangeFrom: "#daterange_from",
-      daterangeTo:   "#daterange_to",
-      // display:       "fixed",
-      presets: [
-        {label: "January",   range: "2012/01/01-2012/01/31"},
-        {label: "February",  range: "2012/02/01-2012/02/29"},
-        {label: "March",     range: "2012/03/01-2012/03/31"},
-        {label: "This Year", range: "2012/01/01-2012/12/31"}
-      ]
+    $("#datetimerangepicker_icon").click(function() {
+      $("#daterangepicker").daterangepickerToggle({
+        daterangeFrom: "#daterange_from",
+        daterangeTo:   "#daterange_to",
+        // display:       "fixed",
+        presets: [
+          {label: "January",   range: "2012/01/01-2012/01/31"},
+          {label: "February",  range: "2012/02/01-2012/02/29"},
+          {label: "March",     range: "2012/03/01-2012/03/31"},
+          {label: "This Year", range: "2012/01/01-2012/12/31"}
+        ]
+      });
     });
-  });
 
 
