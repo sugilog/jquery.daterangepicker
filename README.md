@@ -21,6 +21,7 @@ Example
 - div#daterangepicker
 
 sample code:
+
   $("#datetimerangepicker_icon").click(function() {
     $("#daterangepicker").daterangepickerToggle({
       daterangeFrom: "#daterange_from",
