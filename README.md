@@ -30,7 +30,6 @@ sample:
       to <input type="text" id="daterange_to" />
       &nbsp;
       <a href="#" id="datetimerangepicker_icon"><img src="./image/calendar.png" /></a>
-      
       <div id="daterangepicker"></div>
       <br />
       <span>click calendar icon to open calendar widget</span>
