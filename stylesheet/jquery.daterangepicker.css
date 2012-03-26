@@ -4,12 +4,14 @@ table.daterangepicker_widget {
   border: 1px solid #cccccc;
   border-radius: 5px;
 }
-td.daterangepicker_widget_presets {
+td.daterangepicker_widget_presets,
+td.daterangepicker_widget_extra {
   min-width: 100px;
   border: none;
 }
 table.daterangepicker_calendar,
-table.daterangepicker_preset {
+table.daterangepicker_preset,
+table.daterangepicker_extra_item {
   white-space: normal;
   line-height: normal;
   font-weight: normal;
@@ -20,7 +22,8 @@ table.daterangepicker_preset {
   border-spacing: 2px;
   background-color: #ffffff;
 }
-table.daterangepicker_preset {
+table.daterangepicker_preset,
+table.daterangepicker_extra_item {
   width: 100%;
 }
 tr.daterangepicker_month,
@@ -72,9 +75,17 @@ td.daterangepicker_date {
 td.daterangepicker_previous_month a,
 td.daterangepicker_next_month a,
 td.daterangepicker_date a,
-td.daterangepicker_preset_item a {
+td.daterangepicker_preset_item a,
+td.daterangepicker_close_button a {
   color: #1e90ff;
   text-decoration: none;
+}
+td.daterangepicker_previous_month a:hover,
+td.daterangepicker_next_month a:hover,
+td.daterangepicker_preset_item a:hover,
+td.daterangepicker_close_button a:hover {
+  color: #ffffff;
+  background-color: #1e90ff;
 }
 td.current_selection {
   background-color: #ffa733;
@@ -86,8 +97,11 @@ td.current_selection a {
 td.current_range {
   background-color: #ffc966;
 }
-td.daterangepicker_preset_item {
-  height: 20px;
+td.daterangepicker_preset_item,
+td.daterangepicker_close_button {
   text-align: center;
   border: 1px solid #cccccc;
+}
+td.daterangepicker_close_button {
+  background-color: #cccccc;
 }

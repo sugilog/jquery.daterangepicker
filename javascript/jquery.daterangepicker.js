@@ -253,10 +253,12 @@ $.fn.daterangepicker = function(options) {
           tbody.append(
             $("<tr>").append(
               $("<td>").addClass("daterangepicker_preset_item")
-                .append($("<a>")
-                .css({display: "block"})
-                .prop("href", "#")
-                .text(preset.label))
+                .append(
+                  $("<a>")
+                    .css({display: "block"})
+                    .prop("href", "#")
+                    .text(preset.label)
+                )
                 .data("daterangePreset", range)
             )
           )
@@ -278,6 +280,24 @@ $.fn.daterangepicker = function(options) {
       return $("<table>").addClass("daterangepicker_preset").append(tbody);
     }
   }
+
+  var closeButton = {
+    create: function(_caller) {
+      var tbody = $("<tbody>").append(
+        $("<tr>").append(
+          $("<td>").addClass("daterangepicker_close_button").append(
+            $("<a>").css({display: "block"}).prop({href: "#"}).text("close")
+          )
+        )
+      );
+
+      $(".daterangepicker_close_button a").live("click.daterangepicker", function(){
+        _caller.daterangepickerClose();
+      });
+
+      return $("<table>").addClass("daterangepicker_extra_item").append(tbody);
+    }
+  };
 
   // Initialize
   if (typeof options === "undefined") {
@@ -320,9 +340,12 @@ $.fn.daterangepicker = function(options) {
     $("<table>").addClass("daterangepicker_widget")
       .append(
         $("<tr>")
-          .append($("<td>").css({verticalAlign: "top"}).append($("<div>").addClass("daterangepicker_widget_calendar_from").append(calendar.create(daterange.from, "from")).data("daterangeType", "from")))
-          .append($("<td>").css({verticalAlign: "top"}).append($("<div>").addClass("daterangepicker_widget_calendar_to").append(calendar.create(daterange.to, "to")).data("daterangeType", "to")))
+          .append($("<td>").css({verticalAlign: "top"}).prop("rowspan", 2).append($("<div>").addClass("daterangepicker_widget_calendar_from").append(calendar.create(daterange.from, "from")).data("daterangeType", "from")))
+          .append($("<td>").css({verticalAlign: "top"}).prop("rowspan", 2).append($("<div>").addClass("daterangepicker_widget_calendar_to").append(calendar.create(daterange.to, "to")).data("daterangeType", "to")))
           .append($("<td>").css({verticalAlign: "top"}).addClass("daterangepicker_widget_presets").append(presets.create(options.presets)))
+      )
+      .append(
+        $("<tr>").append($("<td>").css({verticalAlign: "top", height: "100%"}).addClass("daterangepicker_widget_extra").append(closeButton.create(this)))
       )
   );
   calendar.setCurrent(daterange.from, "from");
