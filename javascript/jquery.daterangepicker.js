@@ -125,7 +125,7 @@ $.fn.daterangepicker = function(options) {
         });
       });
     }
-  }
+  };
 
   var dateUtil = {
     range: function(from, to) {
