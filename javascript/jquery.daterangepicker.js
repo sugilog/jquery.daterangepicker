@@ -28,11 +28,10 @@ $.fn.daterangepicker = function(options) {
 
       return $("<table>")
         .addClass("daterangepicker_calendar")
-        // FIXME: do not keep year month as class
-        .addClass(year + "_" + month)
         .append(calendar.row.header(year, month))
         .append(calendar.row.dayname())
-        .append(calendar.row.dates(year, month, type));
+        .append(calendar.row.dates(year, month, type))
+        .data("daterangeDate", {year: year, month: month});
     },
     row: {
       header: function(year, month) {
@@ -45,7 +44,6 @@ $.fn.daterangepicker = function(options) {
       dayname: function() {
         var row = $("<tr>").addClass("daterangepicker_dayname");
         $.each(daterangepicker.weekdays, function(idx, day){
-          // FIXME: do not keep day as class
           row.append($("<td>").addClass("daterangepicker_" + day).text(day));
         });
         return row;
@@ -63,8 +61,10 @@ $.fn.daterangepicker = function(options) {
 
           var d = $("<td>")
           if (dateUtil.inMonth(date, year, month)) {
-            // FIXME: do not keep day as class
-            d.addClass("daterangepicker_date").prop("id", "date_" + type + "_" + dateUtil.format(date, "_"));
+            d.addClass("daterangepicker_date")
+              .prop("id", "date_" + type + "_" + dateUtil.format(date, "_"))
+              .data("daterangeDate", {year: year, month: month, day: date.getDate()})
+              .data("daterangeType", type);
             d.append(calendar.row.link(date.getDate()));
           }
 
@@ -83,36 +83,25 @@ $.fn.daterangepicker = function(options) {
       }
     },
     setCurrent: function(newDate, type) {
-      // FIXME: change date judging
-      if (/([0-9]+)_([0-9]+)/.test($("." + daterangepickerWrapper[type] + " table.daterangepicker_calendar").prop("class"))) {
-        var year  = parseInt(RegExp.$1);
-        var month = parseInt(RegExp.$2);
+      currentDate = $("." + daterangepickerWrapper[type] + " table.daterangepicker_calendar").data().daterangeDate;
 
-        if (newDate.getYear() + 1900 !== year || newDate.getMonth() + 1 !== month) {
-          $("." + daterangepickerWrapper[type]).html(calendar.create(new Date(year, month - 1, 1), type));
-        }
+      if (newDate.getYear() + 1900 !== currentDate.year || newDate.getMonth() + 1 !== currentDate.month) {
+        $("." + daterangepickerWrapper[type]).html(calendar.create(new Date(currentDate.year, currentDate.month - 1, 1), type));
       }
 
-      // FIXME: change date judging
       $("#date_" + type + "_" + dateUtil.format(daterange[type], "_")).removeClass("current_selection");
       daterange[type] = newDate;
-      // FIXME: change date judging
       $("#date_" + type + "_" + dateUtil.format(daterange[type], "_")).addClass("current_selection");
+      // TODO: date format
       $("#" + daterangeFields[type]).val(dateUtil.format(daterange[type], "/"));
     },
     setRange: function() {
       $.each(["from", "to"], function(idx, type) {
         jQuery("." + daterangepickerWrapper[type]).find("td.daterangepicker_date").each(function(idx, td) {
-          // FIXME: change date judging
-          if (/^date_(from|to)_([0-9_]+)$/.test(td.id)) {
-            var tdDate = new Date(RegExp.$2.replace(/_/g, "/"));
+          var tdDate = dateUtil.init($(td).data().daterangeDate);
 
-            if (dateUtil.inRange(tdDate, daterange["from"], daterange["to"]) && !$(td).hasClass("current_selection")) {
-              $(td).addClass("current_range");
-            }
-            else {
-              $(td).removeClass("current_range")
-            }
+          if (dateUtil.inRange(tdDate, daterange["from"], daterange["to"]) && !$(td).hasClass("current_selection")) {
+            $(td).addClass("current_range");
           }
           else {
             $(td).removeClass("current_range")
@@ -202,6 +191,19 @@ $.fn.daterangepicker = function(options) {
     parse: function(dateString) {
       return new Date(dateString.replace(/(_|\.)/g, "/"));
     },
+    init: function(year_or_set, month, day) {
+      if (typeof year_or_set.year === "undefined") {
+        var year = year_or_set;
+        month = month - 1;
+      }
+      else {
+        var year = year_or_set.year;
+        month = year_or_set.month - 1;
+        day = year_or_set.day;
+      }
+
+      return new Date(year, month, day);
+    },
     format: function(date, separator) {
       y = (date.getYear() + 1900).toString();
       m = (date.getMonth() + 1).toString();
@@ -255,6 +257,7 @@ $.fn.daterangepicker = function(options) {
     }
   }
 
+  // Initialize
   if (typeof options === "undefined") {
     options = {};
   }
@@ -280,12 +283,13 @@ $.fn.daterangepicker = function(options) {
     }
   });
 
+  // Initialize Calendar
   $(this).append(
     $("<table>").addClass("daterangepicker_widget")
       .append(
         $("<tr>")
-          .append($("<td>").css({verticalAlign: "top"}).append($("<div>").addClass("daterangepicker_widget_calendar_from").append(calendar.create(daterange.from, "from"))))
-          .append($("<td>").css({verticalAlign: "top"}).append($("<div>").addClass("daterangepicker_widget_calendar_to").append(calendar.create(daterange.to, "to"))))
+          .append($("<td>").css({verticalAlign: "top"}).append($("<div>").addClass("daterangepicker_widget_calendar_from").append(calendar.create(daterange.from, "from")).data("daterangeType", "from")))
+          .append($("<td>").css({verticalAlign: "top"}).append($("<div>").addClass("daterangepicker_widget_calendar_to").append(calendar.create(daterange.to, "to")).data("daterangeType", "to")))
           .append($("<td>").css({verticalAlign: "top"}).addClass("daterangepicker_widget_presets").append(presets.create(options.presets)))
       )
   );
@@ -293,45 +297,39 @@ $.fn.daterangepicker = function(options) {
   calendar.setCurrent(daterange.to, "to");
   calendar.setRange();
 
-
+  // Set Event
   $(".daterangepicker_date a").live("click", function() {
-    // FIXME: change date judging
-    if ((/^date_(from|to)_([0-9_]+)$/).test($(this).closest("td").prop("id"))) {
-      var type = RegExp.$1;
-      var date = dateUtil.parse(RegExp.$2);
-      $("#" + daterangeFields[type]).val(dateUtil.format(date));
+    var td = $(this).closest("td")
+    var type = td.data().daterangeType;
+    var date = dateUtil.init(td.data().daterangeDate);
+    $("#" + daterangeFields[type]).val(dateUtil.format(date));
 
-      calendar.setCurrent(date, type);
-      calendar.setRange()
-    }
+    calendar.setCurrent(date, type);
+    calendar.setRange()
 
     return false;
   });
 
-
-
   $(".daterangepicker_previous_month a").live("click", function() {
-    if (/^daterangepicker_widget_calendar_(from|to)$/.test($(this).closest("div").prop("class"))) {
-      var type = RegExp.$1;
-      var currentMonth = $(this).closest("div").find(".daterangepicker_current_month").text();
-      var previousMonth = dateUtil.previousMonth(currentMonth.split("/")[0], currentMonth.split("/")[1]);
-      $(this).closest("div").html(calendar.create(previousMonth, type));
-      calendar.setCurrent(daterange[type], type);
-      calendar.setRange()
-    }
+    var wrapper = $(this).closest("div");
+    var type = wrapper.data().daterangeType;
+    var currentMonth = wrapper.find(".daterangepicker_current_month").text();
+    var previousMonth = dateUtil.previousMonth(currentMonth.split("/")[0], currentMonth.split("/")[1]);
+    wrapper.html(calendar.create(previousMonth, type));
+    calendar.setCurrent(daterange[type], type);
+    calendar.setRange()
 
     return false;
   })
 
   $(".daterangepicker_next_month a").live("click", function() {
-    if (/^daterangepicker_widget_calendar_(from|to)$/.test($(this).closest("div").prop("class"))) {
-      var type = RegExp.$1;
-      var currentMonth = $(this).closest("div").find(".daterangepicker_current_month").text();
-      var nextMonth = dateUtil.nextMonth(currentMonth.split("/")[0], currentMonth.split("/")[1]);
-      $(this).closest("div").html(calendar.create(nextMonth, type));
-      calendar.setCurrent(daterange[type], type);
-      calendar.setRange()
-    }
+    var wrapper = $(this).closest("div");
+    var type = wrapper.data().daterangeType;
+    var currentMonth = $(this).closest("div").find(".daterangepicker_current_month").text();
+    var nextMonth = dateUtil.nextMonth(currentMonth.split("/")[0], currentMonth.split("/")[1]);
+    wrapper.html(calendar.create(nextMonth, type));
+    calendar.setCurrent(daterange[type], type);
+    calendar.setRange()
 
     return false;
   })
