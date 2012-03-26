@@ -305,8 +305,6 @@ $.fn.daterangepicker = function(options) {
     // Set Event For InputFields
     $(daterangepicker.fields[type]).on("blur.daterangepicker", function() {
       if (daterangepicker.exists()) {
-        console.log(this);
-
         var date = dateUtil.parse($(this).val());
 
         if (!isNaN(date.getDay())) {
