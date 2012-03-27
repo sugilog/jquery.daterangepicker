@@ -315,8 +315,8 @@ $.fn.daterangepicker = function(options) {
       });
 
       // Set Event For PresetItems
-      $(".daterangepicker_preset_item a").live("click.daterangepicker", function() {
-        var preset = $(this).closest("td");
+      $(".daterangepicker_preset_item").live("click.daterangepicker", function() {
+        var preset = $(this);
 
         $.each(["from", "to"], function(idx, type) {
           calendar.setCurrent(preset.data().daterangePreset[type], type);
