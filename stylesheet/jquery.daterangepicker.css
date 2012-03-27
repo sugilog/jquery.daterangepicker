@@ -10,6 +10,9 @@ table.daterangepicker_widget {
 td.daterangepicker_widget_presets,
 td.daterangepicker_widget_extra {
   min-width: 100px;
+  /* for IE */
+  width: auto !important;
+  width: 100px;
   border: none;
 }
 table.daterangepicker_calendar,
@@ -117,7 +120,17 @@ td.daterangepicker_next_year:hover,
 td.daterangepicker_date:hover,
 td.daterangepicker_month_select:hover,
 td.daterangepicker_preset_item:hover,
-td.daterangepicker_close_button:hover {
+td.daterangepicker_close_button:hover,
+/* for IE */
+td.daterangepicker_previous_month a:hover,
+td.daterangepicker_next_month a:hover,
+td.daterangepicker_current_month a:hover,
+td.daterangepicker_previous_year a:hover,
+td.daterangepicker_next_year a:hover,
+td.daterangepicker_date a:hover,
+td.daterangepicker_month_select a:hover,
+td.daterangepicker_preset_item a:hover,
+td.daterangepicker_close_button a:hover {
   background-color: #add8e6;
 }
 td.current_selection {
