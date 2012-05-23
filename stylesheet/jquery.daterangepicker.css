@@ -84,6 +84,7 @@ td.daterangepicker_month_select {
   border: 1px solid #cccccc;
   margin: 2px;
   height: 20px;
+  min-width: 25px;
 }
 td.daterangepicker_month_select {
   width: 45px;
@@ -98,8 +99,8 @@ td.daterangepicker_date > a,
 td.daterangepicker_month_select > a,
 td.daterangepicker_preset_item > a,
 td.daterangepicker_close_button > a {
-  text-decoration: none;
   color: #1e90ff;
+  text-decoration: none;
 }
 td.daterangepicker_previous_month,
 td.daterangepicker_next_month,
@@ -111,6 +112,7 @@ td.daterangepicker_month_select,
 td.daterangepicker_preset_item,
 td.daterangepicker_close_button {
   cursor: pointer;
+  vertical-align: middle;
 }
 td.daterangepicker_previous_month:hover,
 td.daterangepicker_next_month:hover,
@@ -132,6 +134,7 @@ td.daterangepicker_month_select a:hover,
 td.daterangepicker_preset_item a:hover,
 td.daterangepicker_close_button a:hover {
   background-color: #add8e6;
+  text-decoration: none;
 }
 td.current_selection {
   background-color: #ffa733;
@@ -139,6 +142,18 @@ td.current_selection {
 td.current_selection > a {
   color: #ffffff;
   font-weight: bold;
+}
+td.daterangepicker_previous_month > a:visited,
+td.daterangepicker_next_month > a:visited,
+td.daterangepicker_current_month > a:visited,
+td.daterangepicker_previous_year > a:visited,
+td.daterangepicker_next_year > a:visited,
+td.daterangepicker_date > a:visited,
+td.daterangepicker_month_select > a:visited,
+td.daterangepicker_preset_item > a:visited,
+td.daterangepicker_close_button > a:visited {
+  color: #1e90ff;
+  text-decoration: none;
 }
 td.current_range {
   background-color: #ffc966;
