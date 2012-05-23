@@ -16,12 +16,47 @@
     <div id="daterangepicker"></div>
     <br />
     <span>click calendar icon to open calendar widget</span>
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    from: <input type="text" id="another_daterange_from" />
+    &nbsp;-&nbsp;
+    to: <input type="text" id="another_daterange_to" value="2012/05/12" />
+    &nbsp;
+    <a href="#" id="another_daterangepicker_icon"><img src="./image/calendar.png" /></a>
+
+    <div id="another_daterangepicker"></div>
+    <br />
+    <span>try to toggle between multiple calendar widgets</span>
+
     <script type="text/javascript">
       <!--
       $("#daterangepicker_icon").click(function() {
         $("#daterangepicker").daterangepickerToggle({
           daterangeFrom: "#daterange_from",
           daterangeTo: "#daterange_to",
+          presets: [
+            {label: "1月",  range: "2012/01/01-2012/01/31"},
+            {label: "2月",  range: "2012/02/01-2012/02/29"},
+            {label: "3月",  range: "2012/03/01-2012/03/31"},
+            {label: "今年", range: "2012/01/01-2012/12/31"}
+          ]
+        });
+      });
+
+      $("#another_daterangepicker_icon").click(function() {
+        $("#another_daterangepicker").daterangepickerToggle({
+          daterangeFrom: "#another_daterange_from",
+          daterangeTo: "#another_daterange_to",
           presets: [
             {label: "1月",  range: "2012/01/01-2012/01/31"},
             {label: "2月",  range: "2012/02/01-2012/02/29"},

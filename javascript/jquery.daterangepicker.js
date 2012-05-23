@@ -10,12 +10,16 @@ var daterangepicker = {
     from: "#daterange_from",
     to:   "#daterange_to"
   },
-  exists: function() {
-    return (typeof $("table.daterangepicker_widget").get(0) !== "undefined");
+  exists: function(container) {
+    return (typeof $(container).find("table.daterangepicker_widget").get(0) !== "undefined");
   }
 };
 
 $.fn.daterangepickerOpen = function(options) {
+  $("table.daterangepicker_widget").each(function() {
+    $(this).parent().daterangepickerClose();
+  });
+
   $(this).daterangepicker(options);
 };
 $.fn.daterangepickerClose = function() {
@@ -24,7 +28,7 @@ $.fn.daterangepickerClose = function() {
   $(daterangepicker.fields.to).off("blur.daterangepicker");
 };
 $.fn.daterangepickerToggle = function(options) {
-  if (daterangepicker.exists()) {
+  if (daterangepicker.exists(this)) {
     $(this).daterangepickerClose();
   }
   else {
@@ -362,6 +366,7 @@ $.fn.daterangepicker = function(options) {
   }
 
   var daterange = {};
+  var that = this;
 
   $.each(["from", "to"], function(idx, type) {
     if ($(daterangepicker.fields[type]).val() === "") {
@@ -373,7 +378,7 @@ $.fn.daterangepicker = function(options) {
 
     // Set Event For InputFields
     $(daterangepicker.fields[type]).on("blur.daterangepicker", function() {
-      if (daterangepicker.exists()) {
+      if (daterangepicker.exists(that)) {
         var date = dateUtil.parse($(this).val());
 
         if (!isNaN(date.getDay())) {
