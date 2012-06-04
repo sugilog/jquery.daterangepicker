@@ -15,27 +15,27 @@ var daterangepicker = {
   }
 };
 
-$.fn.daterangepickerOpen = function(options) {
+$.fn.daterangepickerOpen = function(_options) {
   $("table.daterangepicker_widget").each(function() {
     $(this).parent().daterangepickerClose();
   });
 
-  $(this).daterangepicker(options);
+  $(this).daterangepicker(_options);
 };
 $.fn.daterangepickerClose = function() {
   $(this).find("table.daterangepicker_widget").remove();
   $(daterangepicker.fields.from).off("blur.daterangepicker");
   $(daterangepicker.fields.to).off("blur.daterangepicker");
 };
-$.fn.daterangepickerToggle = function(options) {
+$.fn.daterangepickerToggle = function(_options) {
   if (daterangepicker.exists(this)) {
     $(this).daterangepickerClose();
   }
   else {
-    $(this).daterangepickerOpen(options);
+    $(this).daterangepickerOpen(_options);
   }
 };
-$.fn.daterangepicker = function(options) {
+$.fn.daterangepicker = function(_options) {
   var calendar = {
     create: function(date, type) {
       var year  = date.getFullYear();
@@ -69,7 +69,7 @@ $.fn.daterangepicker = function(options) {
         var range = dateUtil.range(dateUtil.beginningOfCalendar(year, month), dateUtil.endOfCalendar(year, month));
 
         $.each(range, function(idx, date) {
-          if (date.getDay() === 0) {
+          if (date.getDay() === daterangepicker.startAt) {
             weeks++;
             dateRows[weeks] = $("<tr>").addClass("daterangepicker_week");
           }
@@ -226,21 +226,21 @@ $.fn.daterangepicker = function(options) {
     beginningOfCalendar: function(year, month) {
       var base = this.beginningOfMonth(year, month);
 
-      if (base.getDay() > 0) {
-        return this.ago(base, base.getDay());
+      if (base.getDay() === daterangepicker.startAt) {
+        return base;
       }
       else {
-        return base;
+        return this.ago(base, base.getDay() - daterangepicker.startAt);
       }
     },
     endOfCalendar: function(year, month) {
       var base = this.endOfMonth(year, month);
 
-      if (base.getDay() < 6) {
-        return this.since(base, 6 - base.getDay());
+      if (base.getDay() === daterangepicker.endAt) {
+        return base;
       }
       else {
-        return base;
+        return this.since(base, 6 + daterangepicker.startAt - base.getDay());
       }
     },
     ago: function(base, days) {
@@ -353,12 +353,23 @@ $.fn.daterangepicker = function(options) {
   };
 
   // Initialize
-  if (typeof options === "undefined") {
-    options = {};
+  if (typeof _options === "undefined") {
+    _options = {};
   }
 
-  daterangepicker.fields.from = options.daterangeFrom || daterangepicker.fields.from;
-  daterangepicker.fields.to   = options.daterangeTo   || daterangepicker.fields.to;
+  daterangepicker.fields.from = _options.daterangeFrom || daterangepicker.fields.from;
+  daterangepicker.fields.to   = _options.daterangeTo   || daterangepicker.fields.to;
+
+  daterangepicker.startAt = _options.daterangeStartAt || 0;
+  daterangepicker.endAt = ((daterangepicker.startAt === 0) ? 6 : daterangepicker.startAt - 1);
+
+  if (daterangepicker.startAt !== 0) {
+    var l = daterangepicker.startAt;
+
+    while(l--) {
+      daterangepicker.weekdays.push(daterangepicker.weekdays.shift());
+    }
+  }
 
   var daterangepickerWrapper = {
     from: "daterangepicker_widget_calendar_from",
@@ -394,12 +405,12 @@ $.fn.daterangepicker = function(options) {
   $(this).append(
     $("<table>")
       .addClass("daterangepicker_widget")
-      .css(options.display === "fixed" ? {} : {position: "absolute", top: 0, left: 0})
+      .css(_options.display === "fixed" ? {} : {position: "absolute", top: 0, left: 0})
       .append(
         $("<tr>")
           .append($("<td>").css({verticalAlign: "top"}).prop("rowspan", 2).append($("<div>").addClass("daterangepicker_widget_calendar_from").append(calendar.create(daterange.from, "from")).data("daterangeType", "from")))
           .append($("<td>").css({verticalAlign: "top"}).prop("rowspan", 2).append($("<div>").addClass("daterangepicker_widget_calendar_to").append(calendar.create(daterange.to, "to")).data("daterangeType", "to")))
-          .append($("<td>").css({verticalAlign: "top"}).addClass("daterangepicker_widget_presets").append(presets.create(options.presets)))
+          .append($("<td>").css({verticalAlign: "top"}).addClass("daterangepicker_widget_presets").append(presets.create(_options.presets)))
       )
       .append(
         $("<tr>").append($("<td>").css({verticalAlign: "top", height: "100%"}).addClass("daterangepicker_widget_extra").append(closeButton.create(this)))

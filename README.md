@@ -9,6 +9,8 @@ options
   - [String] selector
 - daterangeTo
   - [String] selector
+- daterangeStartAt
+  - [number] day of week in number, default: 0 (Sunday)
 - display
   - [String] "fixed" or default(float style)
 - presets
@@ -26,6 +28,7 @@ JavaScript:
       $("#daterangepicker").daterangepickerToggle({
         daterangeFrom: "#daterange_from",
         daterangeTo:   "#daterange_to",
+        // daterangeStartAt: 1,
         // display:       "fixed",
         presets: [
           {label: "January",   range: "2012/01/01-2012/01/31"},
