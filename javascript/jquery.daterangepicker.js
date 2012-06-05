@@ -94,7 +94,7 @@ $.fn.daterangepicker = function(_options) {
         return dates;
       },
       link: function(text) {
-        return $("<a>").prop("href", "#").css({display: "block"}).text(text);
+        return $("<a>").prop("href", "javascript: void(0);").css({display: "block"}).text(text);
       }
     },
     setCurrent: function(newDate, type, options) {
