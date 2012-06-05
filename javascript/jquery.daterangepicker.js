@@ -175,7 +175,7 @@ $.fn.daterangepicker = function(_options) {
         return months;
       },
       link: function(text) {
-        return $("<a>").prop("href", "#").css({display: "block"}).text(text);
+        return $("<a>").prop("href", "javascript: void(0);").css({display: "block"}).text(text);
       }
     }
   };
@@ -309,7 +309,7 @@ $.fn.daterangepicker = function(_options) {
                 .append(
                   $("<a>")
                     .css({display: "block"})
-                    .prop("href", "#")
+                    .prop("href", "javascript: void(0);")
                     .text(preset.label)
                 )
                 .data("daterangePreset", range)
@@ -339,7 +339,7 @@ $.fn.daterangepicker = function(_options) {
       var tbody = $("<tbody>").append(
         $("<tr>").append(
           $("<td>").addClass("daterangepicker_close_button").append(
-            $("<a>").css({display: "block"}).prop({href: "#"}).text("close")
+            $("<a>").css({display: "block"}).prop({href: "javascript: void(0);"}).text("close")
           )
         )
       );
