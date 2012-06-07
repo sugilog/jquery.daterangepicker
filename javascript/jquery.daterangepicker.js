@@ -7,12 +7,6 @@
 */
 (function($) {
 var daterangepicker = {
-  defaultWeekdays: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
-  months: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-  fields: {
-    from: "#daterange_from",
-    to:   "#daterange_to"
-  },
   exists: function(container) {
     return (typeof $(container).find("table.daterangepicker_widget").get(0) !== "undefined");
   }
@@ -27,8 +21,7 @@ $.fn.daterangepickerOpen = function(_options) {
 };
 $.fn.daterangepickerClose = function() {
   $(this).find("table.daterangepicker_widget").remove();
-  $(daterangepicker.fields.from).off("blur.daterangepicker");
-  $(daterangepicker.fields.to).off("blur.daterangepicker");
+  $(this).daterangepicker({call: "close"})
 };
 $.fn.daterangepickerToggle = function(_options) {
   if (daterangepicker.exists(this)) {
@@ -39,7 +32,31 @@ $.fn.daterangepickerToggle = function(_options) {
   }
 };
 $.fn.daterangepicker = function(_options) {
+  var _this = this;
+
+  if (typeof _options === "undefined") {
+    _options = {};
+  }
+
+  var daterange = {
+    fields: {
+      from: "#daterange_from",
+      to: "#daterange_to"
+    }
+  };
+
+  daterange.fields.from = _options.daterangeFrom || daterange.fields.from;
+  daterange.fields.to   = _options.daterangeTo   || daterange.fields.to;
+
+  var daterangepickerWrapper = {
+    from: "daterangepicker_widget_calendar_from",
+    to:   "daterangepicker_widget_calendar_to"
+  }
+
+
   var calendar = {
+    defaultWeekdays: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
+    months: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
     create: function(date, type) {
       var year  = date.getFullYear();
       var month = date.getMonth() + 1;
@@ -61,7 +78,7 @@ $.fn.daterangepicker = function(_options) {
       },
       dayname: function() {
         var row = $("<tr>").addClass("daterangepicker_dayname");
-        $.each(daterangepicker.weekdays, function(idx, day){
+        $.each(daterange.weekdays, function(idx, day){
           row.append($("<td>").addClass("daterangepicker_" + day).text(day));
         });
         return row;
@@ -72,7 +89,7 @@ $.fn.daterangepicker = function(_options) {
         var range = dateUtil.range(dateUtil.beginningOfCalendar(year, month), dateUtil.endOfCalendar(year, month));
 
         $.each(range, function(idx, date) {
-          if (date.getDay() === daterangepicker.startAt) {
+          if (date.getDay() === daterange.startAt) {
             weeks++;
             dateRows[weeks] = $("<tr>").addClass("daterangepicker_week");
           }
@@ -117,7 +134,7 @@ $.fn.daterangepicker = function(_options) {
       daterange[type] = newDate;
       $("#date_" + type + "_" + dateUtil.format(daterange[type], "_")).addClass("current_selection");
       // TODO: date format
-      $(daterangepicker.fields[type]).val(dateUtil.format(daterange[type], "/"));
+      $(daterange.fields[type]).val(dateUtil.format(daterange[type], "/"));
     },
     setRange: function() {
       $.each(["from", "to"], function(idx, type) {
@@ -154,7 +171,7 @@ $.fn.daterangepicker = function(_options) {
         var monthRows = new Array();
         var row = -1;
 
-        $.each(daterangepicker.months, function(idx, month) {
+        $.each(calendar.months, function(idx, month) {
           if (idx % 4 === 0) {
             row++;
             monthRows[row] = $("<tr>").addClass("daterangepicker_months_row");
@@ -229,21 +246,22 @@ $.fn.daterangepicker = function(_options) {
     beginningOfCalendar: function(year, month) {
       var base = this.beginningOfMonth(year, month);
 
-      if (base.getDay() === daterangepicker.startAt) {
+      if (base.getDay() === daterange.startAt) {
         return base;
       }
       else {
-        return this.ago(base, base.getDay() - daterangepicker.startAt);
+        var day = (base.getDay() === 0) ? 7 : base.getDay();
+        return this.ago(base, day - daterange.startAt);
       }
     },
     endOfCalendar: function(year, month) {
       var base = this.endOfMonth(year, month);
 
-      if (base.getDay() === daterangepicker.endAt) {
+      if (base.getDay() === daterange.endAt) {
         return base;
       }
       else {
-        return this.since(base, 6 + daterangepicker.startAt - base.getDay());
+        return this.since(base, 6 + daterange.startAt - base.getDay());
       }
     },
     ago: function(base, days) {
@@ -335,7 +353,7 @@ $.fn.daterangepicker = function(_options) {
 
       return $("<table>").addClass("daterangepicker_preset").append(tbody);
     }
-  }
+  };
 
   var closeButton = {
     create: function(_caller) {
@@ -355,59 +373,151 @@ $.fn.daterangepicker = function(_options) {
     }
   };
 
-  // Initialize
-  if (typeof _options === "undefined") {
-    _options = {};
+  var events = {
+    target: {
+      date:         _this.selector + " .daterangepicker_date",
+      prevMonth:    _this.selector + " .daterangepicker_previous_month",
+      nextMonth:    _this.selector + " .daterangepicker_next_month",
+      currentMonth: _this.selector + " .daterangepicker_current_month",
+      month:        _this.selector + " .daterangepicker_month_select",
+      prevYear:     _this.selector + " .daterangepicker_previous_year",
+      nextYear:     _this.selector + " .daterangepicker_next_year"
+    },
+    close: function() {
+      $.each(this.target, function(_, selector) {
+        $(selector).die("click.daterangepicker");
+      });
+
+      $.each(["from", "to"], function(_, type) {
+        $(daterange.fields[type]).off("blur.daterangepicker");
+      });
+    },
+    open: function() {
+      // Set Events For Date
+      $(this.target.date).live("click.daterangepicker", function() {
+        var type = $(this).data().daterangeType;
+        var date = dateUtil.init($(this).data().daterangeDate);
+        $(daterange.fields[type]).val(dateUtil.format(date));
+
+        calendar.setCurrent(date, type);
+        calendar.setRange()
+
+        return false;
+      });
+
+      $(this.target.prevMonth).live("click.daterangepicker", function() {
+        var wrapper = $(this).closest("div");
+        var type = wrapper.data().daterangeType;
+        var current = wrapper.find(".daterangepicker_calendar").data().daterangeDate;
+
+        var previousMonth = dateUtil.previousMonth(current.year, current.month);
+        wrapper.html(calendar.create(previousMonth, type));
+
+        calendar.setCurrent(daterange[type], type, {switchCalendar: false});
+        calendar.setRange()
+
+        return false;
+      });
+
+      $(this.target.nextMonth).live("click.daterangepicker", function() {
+        var wrapper = $(this).closest("div");
+        var type = wrapper.data().daterangeType;
+        var current = wrapper.find(".daterangepicker_calendar").data().daterangeDate;
+
+        var nextMonth = dateUtil.nextMonth(current.year, current.month);
+        wrapper.html(calendar.create(nextMonth, type));
+        calendar.setCurrent(daterange[type], type, {switchCalendar: false});
+        calendar.setRange()
+
+        return false;
+      });
+
+      // Set Events For Month
+      $(this.target.currentMonth).live("click.daterangepicker", function() {
+        var wrapper = $(this).closest("div");
+        var type = wrapper.data().daterangeType;
+        var current = wrapper.find(".daterangepicker_calendar").data().daterangeDate;
+
+        wrapper.html(monthSelector.create(current.year, type));
+        return false;
+      });
+
+      $(this.target.month).live("click.daterangepicker", function() {
+        var wrapper = $(this).closest("div");
+        var type = $(this).data().daterangeType;
+        var date = dateUtil.init($(this).data().daterangeDate);
+
+        wrapper.html(calendar.create(date, type));
+        calendar.setCurrent(daterange[type], type, {switchCalendar: false});
+        calendar.setRange()
+
+        return false;
+      });
+
+      $(this.target.prevYear).live("click.daterangepicker", function() {
+        var wrapper = $(this).closest("div");
+        var type = wrapper.data().daterangeType;
+        var current = wrapper.find(".daterangepicker_calendar").data().daterangeDate;
+
+        wrapper.html(monthSelector.create((current.year - 1), type));
+        return false;
+      });
+
+      $(this.target.nextYear).live("click.daterangepicker", function() {
+        var wrapper = $(this).closest("div");
+        var type = wrapper.data().daterangeType;
+        var current = wrapper.find(".daterangepicker_calendar").data().daterangeDate;
+
+        wrapper.html(monthSelector.create((current.year + 1), type));
+        return false;
+      })
+
+      $.each(["from", "to"], function(_, type) {
+        $(daterange.fields[type]).on("blur.daterangepicker", function() {
+          if (daterangepicker.exists(_this)) {
+            var date = dateUtil.parse($(this).val());
+
+            if (!isNaN(date.getDay())) {
+              calendar.setCurrent(date, type);
+              calendar.setRange()
+            }
+          }
+        })
+      });
+    }
+  };
+
+  if (typeof _options.call !== "undefined") {
+    events[_options.call]();
+    return false
   }
 
-  daterangepicker.fields.from = _options.daterangeFrom || daterangepicker.fields.from;
-  daterangepicker.fields.to   = _options.daterangeTo   || daterangepicker.fields.to;
 
-  daterangepicker.startAt = _options.daterangeStartAt || 0;
-  daterangepicker.endAt = ((daterangepicker.startAt === 0) ? 6 : daterangepicker.startAt - 1);
+  daterange.startAt = _options.daterangeStartAt || 0;
+  daterange.endAt = ((daterange.startAt === 0) ? 6 : daterange.startAt - 1);
 
-  if (typeof daterangepicker.weekdays === "undefined") {
-    daterangepicker.weekdays = daterangepicker.defaultWeekdays;
+  if (typeof daterange.weekdays === "undefined") {
+    daterange.weekdays = calendar.defaultWeekdays;
 
-    if (daterangepicker.startAt !== 0) {
-      var l = daterangepicker.startAt;
+    if (daterange.startAt !== 0) {
+      var l = daterange.startAt;
 
       while(l--) {
-        daterangepicker.weekdays.push(daterangepicker.weekdays.shift());
+        daterange.weekdays.push(daterange.weekdays.shift());
       }
     }
   }
 
-  var daterangepickerWrapper = {
-    from: "daterangepicker_widget_calendar_from",
-    to:   "daterangepicker_widget_calendar_to"
-  }
-
-  var daterange = {};
-  var that = this;
 
   $.each(["from", "to"], function(idx, type) {
-    if ($(daterangepicker.fields[type]).val() === "") {
+    if ($(daterange.fields[type]).val() === "") {
       daterange[type] = new Date();
     }
     else {
-      daterange[type] = new Date($(daterangepicker.fields[type]).val());
+      daterange[type] = new Date($(daterange.fields[type]).val());
     }
-
-    // Set Event For InputFields
-    $(daterangepicker.fields[type]).on("blur.daterangepicker", function() {
-      if (daterangepicker.exists(that)) {
-        var date = dateUtil.parse($(this).val());
-
-        if (!isNaN(date.getDay())) {
-          calendar.setCurrent(date, type);
-          calendar.setRange()
-        }
-      }
-    })
   });
 
-  // Initialize Calendar
   $(this).css({position: "relative"});
   $(this).append(
     $("<table>")
@@ -427,82 +537,6 @@ $.fn.daterangepicker = function(_options) {
   calendar.setCurrent(daterange.to, "to");
   calendar.setRange();
 
-  // Set Events For Date
-  $(".daterangepicker_date").live("click.daterangepicker", function() {
-    var type = $(this).data().daterangeType;
-    var date = dateUtil.init($(this).data().daterangeDate);
-    $(daterangepicker.fields[type]).val(dateUtil.format(date));
-
-    calendar.setCurrent(date, type);
-    calendar.setRange()
-
-    return false;
-  });
-
-  $(".daterangepicker_previous_month").live("click.daterangepicker", function() {
-    var wrapper = $(this).closest("div");
-    var type = wrapper.data().daterangeType;
-    var current = wrapper.find(".daterangepicker_calendar").data().daterangeDate;
-
-    var previousMonth = dateUtil.previousMonth(current.year, current.month);
-    wrapper.html(calendar.create(previousMonth, type));
-    calendar.setCurrent(daterange[type], type, {switchCalendar: false});
-    calendar.setRange()
-
-    return false;
-  })
-
-  $(".daterangepicker_next_month").live("click.daterangepicker", function() {
-    var wrapper = $(this).closest("div");
-    var type = wrapper.data().daterangeType;
-    var current = wrapper.find(".daterangepicker_calendar").data().daterangeDate;
-
-    var nextMonth = dateUtil.nextMonth(current.year, current.month);
-    wrapper.html(calendar.create(nextMonth, type));
-    calendar.setCurrent(daterange[type], type, {switchCalendar: false});
-    calendar.setRange()
-
-    return false;
-  })
-
-  // Set Events For Month
-  $(".daterangepicker_current_month").live("click.daterangepicker", function() {
-    var wrapper = $(this).closest("div");
-    var type = wrapper.data().daterangeType;
-    var current = wrapper.find(".daterangepicker_calendar").data().daterangeDate;
-
-    wrapper.html(monthSelector.create(current.year, type));
-    return false;
-  });
-
-  $(".daterangepicker_month_select").live("click.daterangepicker", function() {
-    var wrapper = $(this).closest("div");
-    var type = $(this).data().daterangeType;
-    var date = dateUtil.init($(this).data().daterangeDate);
-
-    wrapper.html(calendar.create(date, type));
-    calendar.setCurrent(daterange[type], type, {switchCalendar: false});
-    calendar.setRange()
-
-    return false;
-  });
-
-  $(".daterangepicker_previous_year").live("click.daterangepicker", function() {
-    var wrapper = $(this).closest("div");
-    var type = wrapper.data().daterangeType;
-    var current = wrapper.find(".daterangepicker_calendar").data().daterangeDate;
-
-    wrapper.html(monthSelector.create((current.year - 1), type));
-    return false;
-  })
-
-  $(".daterangepicker_next_year").live("click.daterangepicker", function() {
-    var wrapper = $(this).closest("div");
-    var type = wrapper.data().daterangeType;
-    var current = wrapper.find(".daterangepicker_calendar").data().daterangeDate;
-
-    wrapper.html(monthSelector.create((current.year + 1), type));
-    return false;
-  })
+  events.open();
 };
 })(jQuery);
