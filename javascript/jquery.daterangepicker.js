@@ -4,7 +4,7 @@
 */
 (function($) {
 var daterangepicker = {
-  weekdays: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
+  defaultWeekdays: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
   months: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
   fields: {
     from: "#daterange_from",
@@ -363,11 +363,15 @@ $.fn.daterangepicker = function(_options) {
   daterangepicker.startAt = _options.daterangeStartAt || 0;
   daterangepicker.endAt = ((daterangepicker.startAt === 0) ? 6 : daterangepicker.startAt - 1);
 
-  if (daterangepicker.startAt !== 0) {
-    var l = daterangepicker.startAt;
+  if (typeof daterangepicker.weekdays === "undefined") {
+    daterangepicker.weekdays = daterangepicker.defaultWeekdays;
 
-    while(l--) {
-      daterangepicker.weekdays.push(daterangepicker.weekdays.shift());
+    if (daterangepicker.startAt !== 0) {
+      var l = daterangepicker.startAt;
+
+      while(l--) {
+        daterangepicker.weekdays.push(daterangepicker.weekdays.shift());
+      }
     }
   }
 
