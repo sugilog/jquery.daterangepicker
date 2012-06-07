@@ -1,7 +1,9 @@
 /*!
- * jquery.daterangepicker
- * ver 0.0.1
+ * jquery.daterangepicker v0.0.1
+ *
  * Copyright (c) 2012 Takayuki Sugita, http://github.com/sugilog
+ * Released under the MIT License
+ *
 */
 (function($) {
 var daterangepicker = {
