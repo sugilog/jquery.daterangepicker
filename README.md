@@ -1,9 +1,10 @@
-daterangepicker
+jquery.daterangepicker
 ========================================
 
 jquery plugin for daterange UI selectable widget
 
-options
+
+Options
 ------------------------------------------------------------
 - daterangeFrom
   - [String] selector
@@ -15,6 +16,7 @@ options
   - [String] "fixed" or default(float style)
 - presets
   - [Array]  items should be set as Hash (label and range(date-date))
+
 
 Example
 ------------------------------------------------------------
@@ -40,3 +42,6 @@ JavaScript:
     });
 
 
+Licence
+------------------------------------------------------------
+jquery.selectpicker is licenced under the MIT License.

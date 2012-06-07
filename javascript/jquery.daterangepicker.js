@@ -1,6 +1,7 @@
 /*!
  * jquery.daterangepicker
- * Copyright 2012, TAKAYUKI SUGITA (sugilog)
+ * ver 0.0.1
+ * Copyright (c) 2012 Takayuki Sugita, http://github.com/sugilog
 */
 (function($) {
 var daterangepicker = {
