@@ -339,18 +339,6 @@ $.fn.daterangepicker = function(_options) {
         }
       });
 
-      // Set Event For PresetItems
-      $(".daterangepicker_preset_item").live("click.daterangepicker", function() {
-        var preset = $(this);
-
-        $.each(["from", "to"], function(idx, type) {
-          calendar.setCurrent(preset.data().daterangePreset[type], type);
-        });
-        calendar.setRange();
-
-        return false;
-      });
-
       return $("<table>").addClass("daterangepicker_preset").append(tbody);
     }
   };
@@ -381,7 +369,8 @@ $.fn.daterangepicker = function(_options) {
       currentMonth: _this.selector + " .daterangepicker_current_month",
       month:        _this.selector + " .daterangepicker_month_select",
       prevYear:     _this.selector + " .daterangepicker_previous_year",
-      nextYear:     _this.selector + " .daterangepicker_next_year"
+      nextYear:     _this.selector + " .daterangepicker_next_year",
+      preset:       _this.selector + " .daterangepicker_preset_item"
     },
     close: function() {
       $.each(this.target, function(_, selector) {
@@ -471,6 +460,18 @@ $.fn.daterangepicker = function(_options) {
         wrapper.html(monthSelector.create((current.year + 1), type));
         return false;
       })
+
+      // Set Event For PresetItems
+      $(this.target.preset).live("click.daterangepicker", function() {
+        var preset = $(this);
+
+        $.each(["from", "to"], function(idx, type) {
+          calendar.setCurrent(preset.data().daterangePreset[type], type);
+        });
+        calendar.setRange();
+
+        return false;
+      });
 
       $.each(["from", "to"], function(_, type) {
         $(daterange.fields[type]).on("blur.daterangepicker", function() {
