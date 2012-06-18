@@ -7,13 +7,14 @@
     <link type="text/css" rel="stylesheet" media="all" href="./stylesheet/jquery.daterangepicker.css"></script>
   </head>
   <body>
-    from: <input type="text" id="daterange_from" value="2012/01/12" />
-    &nbsp;-&nbsp;
-    to: <input type="text" id="daterange_to" />
-    &nbsp;
-    <a href="javascript: void(0);" id="daterangepicker_icon"><img src="./image/calendar.png" /></a>
+    <div id="daterangepicker">
+      from: <input type="text" id="daterange_from" value="2012/01/12" />
+      &nbsp;-&nbsp;
+      to: <input type="text" id="daterange_to" />
+      &nbsp;
+      <a href="javascript: void(0);" id="daterangepicker_icon"><img src="./image/calendar.png" /></a>
+    </div>
 
-    <div id="daterangepicker"></div>
     <br />
     <span>click calendar icon to open calendar widget</span>
     <br />
@@ -28,22 +29,39 @@
     <br />
     <br />
     <br />
-    from: <input type="text" id="another_daterange_from" />
-    &nbsp;-&nbsp;
-    to: <input type="text" id="another_daterange_to" value="2012/05/12" />
-    &nbsp;
-    <a href="javascript: void(0);" id="another_daterangepicker_icon"><img src="./image/calendar.png" /></a>
-
-    <div id="another_daterangepicker"></div>
+    <div id="another_daterangepicker">
+      other input: <input type="text" id="another_input" value="another input" />
+      &nbsp;
+      from: <input type="text" id="another_daterange_from" />
+      &nbsp;-&nbsp;
+      to: <input type="text" id="another_daterange_to" value="2012/05/12" />
+      <a href="javascript: void(0);" id="another_daterangepicker_icon"><img src="./image/calendar.png" /></a>
+    </div>
     <br />
     <span>try to toggle between multiple calendar widgets</span>
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    from: <input type="text" id="not_wrapped_daterange_from" />
+    &nbsp;-&nbsp;
+    to: <input type="text" id="not_wrapped_daterange_to" value="2012/05/12" />
+    <a href="javascript: void(0);" id="not_wrapped_daterangepicker_icon"><img src="./image/calendar.png" /></a>
+    <div id="not_wrapped">
+    </div>
 
     <script type="text/javascript">
       <!--
       $("#daterangepicker_icon").click(function() {
         $("#daterangepicker").daterangepickerToggle({
-          daterangeFrom: "#daterange_from",
-          daterangeTo: "#daterange_to",
           daterangeStartAt: 1,
           presets: [
             {label: "1月",  range: "2012/01/01-2012/01/31"},
@@ -64,6 +82,20 @@
             {label: "3月",  range: "2012/03/01-2012/03/31"},
             {label: "今年", range: "2012/01/01-2012/12/31"}
           ]
+        });
+      });
+
+      $("#not_wrapped_daterangepicker_icon").click(function() {
+        $("#not_wrapped").daterangepickerToggle({
+          daterangeFrom: "#not_wrapped_daterange_from",
+          daterangeTo: "#not_wrapped_daterange_to",
+          presets: [
+            {label: "1月",  range: "2012/01/01-2012/01/31"},
+            {label: "2月",  range: "2012/02/01-2012/02/29"},
+            {label: "3月",  range: "2012/03/01-2012/03/31"},
+            {label: "今年", range: "2012/01/01-2012/12/31"}
+          ],
+          widgetArea: "#not_wrapped_daterangepicker_icon"
         });
       });
       -->

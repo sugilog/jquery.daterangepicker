@@ -1,5 +1,5 @@
 /*!
- * jquery.daterangepicker v0.0.1
+ * jquery.daterangepicker v0.0.2
  *
  * Copyright (c) 2012 Takayuki Sugita, http://github.com/sugilog
  * Released under the MIT License
@@ -38,21 +38,38 @@ $.fn.daterangepicker = function(_options) {
     _options = {};
   }
 
+  var _from = (_from = $(this).find("input[type=text]").get(0)) ? _from.id : "daterange_from";
+  var _to   = (_to = $(this).find("input[type=text]").get(1)) ? _to.id : "daterange_to";
+
   var daterange = {
     fields: {
-      from: "#daterange_from",
-      to: "#daterange_to"
+      from: "#" + _from,
+      to:   "#" + _to
     }
   };
 
   daterange.fields.from = _options.daterangeFrom || daterange.fields.from;
   daterange.fields.to   = _options.daterangeTo   || daterange.fields.to;
 
+  daterange.wrapFields = function(){
+    return $(_this).find([daterange.fields.from, daterange.fields.to].join(",")).length === 2;
+  };
+
+  daterange.widgetArea = ["#" + _this.get(0).id];
+
+  if (typeof _options.widgetArea !== "undefined") {
+    daterange.widgetArea.push(_options.widgetArea);
+  }
+
+  if (!daterange.wrapFields()) {
+    daterange.widgetArea.push(daterange.fields.from);
+    daterange.widgetArea.push(daterange.fields.to);
+  }
+
   var daterangepickerWrapper = {
     from: "daterangepicker_widget_calendar_from",
     to:   "daterangepicker_widget_calendar_to"
   }
-
 
   var calendar = {
     defaultWeekdays: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
@@ -523,7 +540,7 @@ $.fn.daterangepicker = function(_options) {
   $(this).append(
     $("<table>")
       .addClass("daterangepicker_widget")
-      .css(_options.display === "fixed" ? {} : {position: "absolute", top: 0, left: 0})
+      .css(_options.display === "fixed" ? {} : {position: "absolute", top: (daterange.wrapFields() ? $(daterange.fields.from).height() + 5 : 0), left: (daterange.wrapFields() ? $(daterange.fields.from).position().left - 10 : 0)})
       .append(
         $("<tr>")
           .append($("<td>").css({verticalAlign: "top"}).prop("rowspan", 2).append($("<div>").addClass("daterangepicker_widget_calendar_from").append(calendar.create(daterange.from, "from")).data("daterangeType", "from")))
@@ -538,6 +555,45 @@ $.fn.daterangepicker = function(_options) {
   calendar.setCurrent(daterange.to, "to");
   calendar.setRange();
 
+  $(daterange.widgetArea.join(",")).outerOn("click.daterangepicker", function() {
+    $(_this).daterangepickerClose();
+  });
+
   events.open();
 };
+
+if (typeof $.fn.outerOn === "undefined" && typeof $.fn.outerOff === "undefined") {
+  $.fn.outerOn = function() {
+    var args = $(arguments).toArray();
+    var _this = this;
+    var handleEvent = (args.shift() + [".outer" + "_" + _this.get(0).id].join());
+    var selector = "body";
+
+    if (typeof args[0] !== "function") {
+      selector = args.shift();
+    }
+
+    var callback = args.shift();
+
+    $(selector).on(handleEvent, function(e) {
+      if ($(e.target).closest(_this).length === 0) {
+        callback.apply(_this, [e]);
+      }
+    });
+  };
+
+  $.fn.outerOff = function() {
+    var args = $(arguments).toArray();
+    var _this = this;
+    var handleEvent = (args.shift() + [".outer" + "_" + _this.get(0).id].join());
+    var selector = "body";
+
+    if (typeof args[0] !== "undefined") {
+      selector = args.shift();
+    }
+
+    $(selector).off(handleEvent);
+  }
+}
+
 })(jQuery);
