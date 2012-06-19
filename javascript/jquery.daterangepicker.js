@@ -37,6 +37,9 @@ $.fn.daterangepicker = function(_options) {
   if (typeof _options === "undefined") {
     _options = {};
   }
+  if (typeof _options.extraButton === "undefined") {
+    _options.extraButton = {}
+  }
 
   var _from = (_from = $(this).find("input[type=text]").get(0)) ? _from.id : "daterange_from";
   var _to   = (_to = $(this).find("input[type=text]").get(1)) ? _to.id : "daterange_to";
@@ -45,7 +48,8 @@ $.fn.daterangepicker = function(_options) {
     fields: {
       from: "#" + _from,
       to:   "#" + _to
-    }
+    },
+    extraButton: {}
   };
 
   daterange.fields.from = _options.daterangeFrom || daterange.fields.from;
@@ -65,6 +69,9 @@ $.fn.daterangepicker = function(_options) {
     daterange.widgetArea.push(daterange.fields.from);
     daterange.widgetArea.push(daterange.fields.to);
   }
+
+  daterange.extraButton.blank = _options.extraButton.blank;
+  daterange.extraButton.close = _options.extraButton.close;
 
   var daterangepickerWrapper = {
     from: "daterangepicker_widget_calendar_from",
@@ -141,17 +148,23 @@ $.fn.daterangepicker = function(_options) {
 
       currentDate = $("." + daterangepickerWrapper[type] + " table.daterangepicker_calendar").data().daterangeDate;
 
-      if (options.switchCalendar) {
+      if (typeof newDate !== "undefined" && options.switchCalendar) {
         if (newDate.getFullYear() !== currentDate.year || newDate.getMonth() + 1 !== currentDate.month) {
           $("." + daterangepickerWrapper[type]).html(calendar.create(newDate, type));
         }
       }
 
       $("#date_" + type + "_" + dateUtil.format(daterange[type], "_")).removeClass("current_selection");
-      daterange[type] = newDate;
-      $("#date_" + type + "_" + dateUtil.format(daterange[type], "_")).addClass("current_selection");
-      // TODO: date format
-      $(daterange.fields[type]).val(dateUtil.format(daterange[type], "/"));
+
+      if (typeof newDate === "undefined") {
+        $(daterange.fields[type]).val("");
+      }
+      else {
+        daterange[type] = newDate;
+        $("#date_" + type + "_" + dateUtil.format(daterange[type], "_")).addClass("current_selection");
+        // TODO: date format
+        $(daterange.fields[type]).val(dateUtil.format(daterange[type], "/"));
+      }
     },
     setRange: function() {
       $.each(["from", "to"], function(idx, type) {
@@ -360,21 +373,25 @@ $.fn.daterangepicker = function(_options) {
     }
   };
 
-  var closeButton = {
-    create: function(_caller) {
-      var tbody = $("<tbody>").append(
-        $("<tr>").append(
-          $("<td>").addClass("daterangepicker_close_button").append(
-            $("<a>").css({display: "block"}).prop({href: "javascript: void(0);"}).text("close")
-          )
-        )
-      );
+  var extraButton = {
+    create: function() {
+      var rows = $("<tbody>");
 
-      $(".daterangepicker_close_button").live("click.daterangepicker", function(){
-        _caller.daterangepickerClose();
+      $.each(["blank", "close"], function(_, type) {
+        if (typeof daterange.extraButton[type] !== "undefined") {
+          rows.append(extraButton.build(type, daterange.extraButton[type]));
+        }
       });
 
-      return $("<table>").addClass("daterangepicker_extra_item").append(tbody);
+      return $("<table>").addClass("daterangepicker_extra_item").append(rows);
+    },
+    build: function(type, buttonLabel) {
+      return $("<tr>")
+        .append(
+          $("<td>").addClass("daterangepicker_" + type + "_button").append(
+            $("<a>").css({display: "block"}).prop({href: "javascript: void(0);"}).text(buttonLabel || type)
+          )
+        );
     }
   };
 
@@ -387,7 +404,9 @@ $.fn.daterangepicker = function(_options) {
       month:        _this.selector + " .daterangepicker_month_select",
       prevYear:     _this.selector + " .daterangepicker_previous_year",
       nextYear:     _this.selector + " .daterangepicker_next_year",
-      preset:       _this.selector + " .daterangepicker_preset_item"
+      preset:       _this.selector + " .daterangepicker_preset_item",
+      close:        _this.selector + " .daterangepicker_close_button",
+      blank:        _this.selector + " .daterangepicker_blank_button"
     },
     close: function() {
       $.each(this.target, function(_, selector) {
@@ -482,12 +501,23 @@ $.fn.daterangepicker = function(_options) {
       $(this.target.preset).live("click.daterangepicker", function() {
         var preset = $(this);
 
-        $.each(["from", "to"], function(idx, type) {
+        $.each(["from", "to"], function(_, type) {
           calendar.setCurrent(preset.data().daterangePreset[type], type);
         });
         calendar.setRange();
 
         return false;
+      });
+
+      $(this.target.close).live("click.daterangepicker", function(){
+        _this.daterangepickerClose();
+      });
+
+      $(this.target.blank).live("click.daterangepicker", function(){
+        $.each(["from", "to"], function(_, type) {
+          calendar.setCurrent(undefined, type);
+        });
+        _this.daterangepickerClose();
       });
 
       $.each(["from", "to"], function(_, type) {
@@ -548,7 +578,7 @@ $.fn.daterangepicker = function(_options) {
           .append($("<td>").css({verticalAlign: "top"}).addClass("daterangepicker_widget_presets").append(presets.create(_options.presets)))
       )
       .append(
-        $("<tr>").append($("<td>").css({verticalAlign: "top", height: "100%"}).addClass("daterangepicker_widget_extra").append(closeButton.create(this)))
+        $("<tr>").append($("<td>").css({verticalAlign: "top", height: "100%"}).addClass("daterangepicker_widget_extra").append(extraButton.create()))
       )
   );
   calendar.setCurrent(daterange.from, "from");

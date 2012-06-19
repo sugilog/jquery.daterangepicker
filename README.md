@@ -31,6 +31,19 @@ Options
   <dd>
     [String] selector; define widget area not to include widget close area
   </dd>
+  <dt>extraButton</dt>
+  <dd>
+    [-] container of button settings
+  </dd>
+  <dt>extraButton.close</dt>
+  <dd>
+    [String] label of close button to close widget (default: undefined => hide close button)
+  </dd>
+  <dt>extraButton.close</dt>
+  <dd>
+    [String] label of blank button to blank fields and close widget (default: undefined => hide blank button)
+  </dd>
+</dl>
 
 
 example (using wrap selector of daterangepicker and inputs:
