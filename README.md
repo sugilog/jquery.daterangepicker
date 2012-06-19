@@ -6,32 +6,39 @@ jquery plugin for daterange UI selectable widget
 
 Options
 ------------------------------------------------------------
-- daterangeFrom
-  - [String] selector (optional when wrap inputs)
-- daterangeTo
-  - [String] selector (optional when wrap inputs)
-- daterangeStartAt
-  - [number] day of week in number, default: 0 (Sunday)
-- display
-  - [String] "fixed" or default(float style)
-- presets
-  - [Array]  items should be set as Hash (label and range(date-date))
-- widgetArea
-  define widget area not to include widget close area
+<dl>
+  <dt>daterangeFrom</dt>
+  <dd>
+    [String] selector (optional when wrap inputs)
+  </dd>
+  <dt>daterangeTo</dt>
+  <dd>
+    [String] selector (optional when wrap inputs)
+  </dd>
+  <dt>daterangeStartAt</dt>
+  <dd>
+    [number] day of week in number, default: 0 (Sunday)
+  </dd>
+  <dt>display</dt>
+  <dd>
+    [String] "fixed" or default(float style)
+  </dd>
+  <dt>presets</dt>
+  <dd>
+    [Array]  items should be set as Hash (label and range(date-date))
+  </dd>
+  <dt>widgetArea</dd>
+  <dd>
+    [String] selector; define widget area not to include widget close area
+  </dd>
 
 
-Example
-------------------------------------------------------------
+example (using wrap selector of daterangepicker and inputs:
 
-- input#daterange_from and input#daterange_to
-- div#daterangepicker wrap these inputs
-
-- no need to define From and To selectors
-
-JavaScript:
-
-    $("#datetimerangepicker_icon").click(function() {
-      $("#daterangepicker").daterangepickerToggle({
+    $(icon_for_daterangepicker).click(function() {
+      $(wrap_selector_of_daterangepicker_and_inputs).daterangepickerToggle({
+        // daterangeFrom: "#daterange_from",
+        // daterangeTo:   "#daterange_to",
         // daterangeStartAt: 1,
         // display:       "fixed",
         presets: [
@@ -44,26 +51,7 @@ JavaScript:
     });
 
 
-- input#daterange_from and input#daterange_to
-- div#daterangepicker
-
-JavaScript:
-
-    $("#datetimerangepicker_icon").click(function() {
-      $("#daterangepicker").daterangepickerToggle({
-        daterangeFrom: "#daterange_from",
-        daterangeTo:   "#daterange_to",
-        // daterangeStartAt: 1,
-        // display:       "fixed",
-        presets: [
-          {label: "January",   range: "2012/01/01-2012/01/31"},
-          {label: "February",  range: "2012/02/01-2012/02/29"},
-          {label: "March",     range: "2012/03/01-2012/03/31"},
-          {label: "This Year", range: "2012/01/01-2012/12/31"}
-        ],
-        // widgetArea: "selector"
-      });
-    });
+to know more usage, please see the sample.html and its source
 
 
 Licence
