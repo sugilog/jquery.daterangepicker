@@ -85,6 +85,21 @@
           extraButton: {
             blank: "BLANK",
             close: "CLOSE"
+          },
+          onPick: function(){
+            console.log(this);
+            console.log("onPick");
+            console.log(arguments);
+          },
+          onPickPreset: function(){
+            console.log(this);
+            console.log("onPickPreset");
+            console.log(arguments);
+          },
+          onPickBlank: function(){
+            console.log(this);
+            console.log("onPickBlank");
+            console.log(arguments);
           }
         });
       });

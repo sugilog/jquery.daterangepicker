@@ -49,8 +49,17 @@ $.fn.daterangepicker = function(_options) {
       from: "#" + _from,
       to:   "#" + _to
     },
-    extraButton: {}
+    extraButton: {
+     blank: _options.extraButton.blank,
+     close: _options.extraButton.close
+    },
+    callback: {
+      onPick:       _options.onPick,
+      onPickPreset: _options.onPickPreset,
+      onPickBlank:  _options.onPickBlank,
+    }
   };
+
 
   daterange.fields.from = _options.daterangeFrom || daterange.fields.from;
   daterange.fields.to   = _options.daterangeTo   || daterange.fields.to;
@@ -69,9 +78,6 @@ $.fn.daterangepicker = function(_options) {
     daterange.widgetArea.push(daterange.fields.from);
     daterange.widgetArea.push(daterange.fields.to);
   }
-
-  daterange.extraButton.blank = _options.extraButton.blank;
-  daterange.extraButton.close = _options.extraButton.close;
 
   var daterangepickerWrapper = {
     from: "daterangepicker_widget_calendar_from",
@@ -425,8 +431,14 @@ $.fn.daterangepicker = function(_options) {
         $(daterange.fields[type]).val(dateUtil.format(date));
 
         calendar.setCurrent(date, type);
-        calendar.setRange()
+        calendar.setRange();
 
+        callbackArg = {};
+        callbackArg[type] = date
+
+        if (typeof daterange.callback.onPick !== "undefined") {
+          daterange.callback.onPick.apply(_this, [callbackArg])
+        }
         return false;
       });
 
@@ -500,12 +512,18 @@ $.fn.daterangepicker = function(_options) {
       // Set Event For PresetItems
       $(this.target.preset).live("click.daterangepicker", function() {
         var preset = $(this);
+        var callbackArg = {};
 
         $.each(["from", "to"], function(_, type) {
-          calendar.setCurrent(preset.data().daterangePreset[type], type);
+          var date = preset.data().daterangePreset[type];
+          calendar.setCurrent(date, type);
+          callbackArg[type] = date
         });
         calendar.setRange();
 
+        if (typeof daterange.callback.onPickPreset !== "undefined") {
+          daterange.callback.onPickPreset.apply(_this, [callbackArg]);
+        }
         return false;
       });
 
@@ -517,7 +535,11 @@ $.fn.daterangepicker = function(_options) {
         $.each(["from", "to"], function(_, type) {
           calendar.setCurrent(undefined, type);
         });
-        _this.daterangepickerClose();
+
+        if (typeof daterange.callback.onPickBlank !== "undefined") {
+          daterange.callback.onPickBlank.apply(_this);
+        }
+        return false;
       });
 
       $.each(["from", "to"], function(_, type) {
