@@ -40,6 +40,7 @@
     <br />
     <span>try to toggle between multiple calendar widgets</span>
     <br />
+    <span>Widget close on click Presets or Blank</span>
     <br />
     <br />
     <br />
@@ -95,11 +96,13 @@
             console.log(this);
             console.log("onPickPreset");
             console.log(arguments);
+            $(this).daterangepickerClose();
           },
           onPickBlank: function(){
             console.log(this);
             console.log("onPickBlank");
             console.log(arguments);
+            $(this).daterangepickerClose();
           }
         });
       });
