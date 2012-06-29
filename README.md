@@ -45,6 +45,58 @@ Options
   </dd>
 </dl>
 
+Callbacks
+------------------------------------------------------------
+set as options
+
+<dl>
+  <dt>onPick</dt>
+  <dd>
+    [function] callback on pick(click) date item.
+
+    <dl>
+      <dt>this</dt>
+      <dd>
+        [jQuery object] daterangepicker caller.
+      </dd>
+      <dt>arguments</dt>
+      <dd>
+        [Object (hash)] changed date set: key has "from" or "to", and value has Date object.
+      </dd>
+    </dl>
+  </dd>
+  <dt>onPickPreset</dt>
+  <dd>
+    [function] callback on pick(click) preset item.
+
+    <dl>
+      <dt>this</dt>
+      <dd>
+        [jQuery object] daterangepicker caller.
+      </dd>
+      <dt>arguments</dt>
+      <dd>
+        [Object (hash)] changed date set: key has "from" and "to", and value has each Date objects.
+      </dd>
+    </dl>
+  </dd>
+  <dt>onPickBlank</dt>
+  <dd>
+    [function] callback on pick(click) extraButton blank item.
+
+    <dl>
+      <dt>this</dt>
+      <dd>
+        [jQuery object] daterangepicker caller.
+      </dd>
+      <dt>arguments</dt>
+      <dd>
+        none
+      </dd>
+    </dl>
+  </dd>
+</dl>
+
 
 example (using wrap selector of daterangepicker and inputs:
 
@@ -63,6 +115,37 @@ example (using wrap selector of daterangepicker and inputs:
       });
     });
 
+example (using callback):
+
+    $(icon_for_daterangepicker).click(function() {
+      $(wrap_selector_of_daterangepicker_and_inputs).daterangepickerToggle({
+        // daterangeFrom: "#daterange_from",
+        // daterangeTo:   "#daterange_to",
+        // daterangeStartAt: 1,
+        // display:       "fixed",
+        presets: [
+          {label: "January",   range: "2012/01/01-2012/01/31"},
+          {label: "February",  range: "2012/02/01-2012/02/29"},
+          {label: "March",     range: "2012/03/01-2012/03/31"},
+          {label: "This Year", range: "2012/01/01-2012/12/31"}
+        ],
+        extraButton: {
+          blank: "BLANK",
+          close: "CLOSE"
+        },
+        onPick: function(){
+          // some function
+        },
+        onPickPreset: function(){
+          // close
+          $(this).daterangepickerClose();
+        },
+        onPickBlank: function(){
+          // close
+          $(this).daterangepickerClose();
+        }
+      });
+    });
 
 to know more usage, please see the sample.html and its source
 
