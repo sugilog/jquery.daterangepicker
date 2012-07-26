@@ -38,7 +38,7 @@ $.fn.daterangepicker = function(_options) {
     _options = {};
   }
   if (typeof _options.extraButton === "undefined") {
-    _options.extraButton = {}
+    _options.extraButton = {};
   }
 
   var _from = (_from = $(this).find("input[type=text]").get(0)) ? _from.id : "daterange_from";
@@ -56,7 +56,7 @@ $.fn.daterangepicker = function(_options) {
     callback: {
       onPick:       _options.onPick,
       onPickPreset: _options.onPickPreset,
-      onPickBlank:  _options.onPickBlank,
+      onPickBlank:  _options.onPickBlank
     }
   };
 
