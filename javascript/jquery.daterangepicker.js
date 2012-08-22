@@ -125,13 +125,16 @@ $.fn.daterangepicker = function(_options) {
           }
 
           var d = $("<td>")
-          if (dateUtil.inMonth(date, year, month)) {
-            d.addClass("daterangepicker_date")
-              .prop("id", "date_" + type + "_" + dateUtil.format(date, "_"))
-              .data("daterangeDate", {year: year, month: month, day: date.getDate()})
-              .data("daterangeType", type);
-            d.append(calendar.row.link(date.getDate()));
+          d.addClass("daterangepicker_date")
+            .prop("id", "date_" + type + "_" + dateUtil.format(date, "_"))
+            .data("daterangeDate", {year: date.getFullYear(), month: (date.getMonth() + 1), day: date.getDate()})
+            .data("daterangeType", type);
+
+          if (!dateUtil.inMonth(date, year, month)) {
+            d.addClass("daterangepicker_date_out_of_current_month");
           }
+
+          d.append(calendar.row.link(date.getDate()));
 
           dateRows[weeks].append(d);
         })

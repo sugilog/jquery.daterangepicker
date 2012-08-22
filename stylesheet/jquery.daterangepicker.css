@@ -49,7 +49,7 @@ td.daterangepicker_next_year,
 td.daterangepicker_current_month,
 td.daterangepicker_current_year,
 tr.daterangepicker_preset_header > td {
-  background-color: #eeeeee;
+  background-color: #dddddd;
   text-align: center;
   margin: 2px;
   height: 20px;
@@ -146,6 +146,10 @@ td.daterangepicker_blank_button > a:hover {
   background-color: #add8e6;
   text-decoration: none;
 }
+/* this selector should define before current_(selection|range) */
+td.daterangepicker_date_out_of_current_month {
+  background-color: #dddddd;
+}
 td.current_selection {
   background-color: #ffa733;
 }
@@ -178,5 +182,5 @@ td.daterangepicker_blank_button {
 }
 td.daterangepicker_close_button,
 td.daterangepicker_blank_button {
-  background-color: #eeeeee;
+  background-color: #dddddd;
 }
