@@ -39,9 +39,17 @@ Options
   <dd>
     [String] label of close button to close widget (default: undefined => hide close button)
   </dd>
-  <dt>extraButton.close</dt>
+  <dt>extraButton.blank</dt>
   <dd>
-    [String] label of blank button to blank fields and close widget (default: undefined => hide blank button)
+    [String] label of blank button to blank fields (default: undefined => hide blank button)
+  </dd>
+  <dt>extraButton.fromNull</dt>
+  <dd>
+    [String] label of fromNull button to blank "from field" and assign none to assigned "to date" (default: undefined => hide fromNull button)
+  </dd>
+  <dt>extraButton.toNull</dt>
+  <dd>
+    [String] label of toNull button to blank "to field" and assign assigned "from date" to none (default: undefined => hide toNull button)
   </dd>
 </dl>
 
@@ -95,6 +103,21 @@ set as options
       </dd>
     </dl>
   </dd>
+  <dt>onPickFromNull, onPickToNull</dt>
+  <dd>
+    [function] callback on pick(click) extraButton fromNull/toNull item.
+
+    <dl>
+      <dt>this</dt>
+      <dd>
+        [jQuery object] daterangepicker caller.
+      </dd>
+      <dt>arguments</dt>
+      <dd>
+        none
+      </dd>
+    </dl>
+  </dd>
 </dl>
 
 
@@ -131,16 +154,30 @@ example (using callback):
         ],
         extraButton: {
           blank: "BLANK",
-          close: "CLOSE"
+          close: "CLOSE",
+          fromNull: "FROM NULL",
+          toNull:   "TO NULL"
         },
         onPick: function(){
           // some function
         },
         onPickPreset: function(){
+          // some function
           // close
           $(this).daterangepickerClose();
         },
         onPickBlank: function(){
+          // some function
+          // close
+          $(this).daterangepickerClose();
+        },
+        onPickFromNull: function(){
+          // some function
+          // close
+          $(this).daterangepickerClose();
+        },
+        onPicktoNull: function(){
+          // some function
           // close
           $(this).daterangepickerClose();
         }
