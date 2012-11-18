@@ -91,7 +91,15 @@ $.fn.daterangepicker = function(_options) {
   var calendar = {
     defaultWeekdays: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
     months: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-    create: function(date, type) {
+    create: function(date, type, options) {
+      if (typeof options === "undefined") {
+        options = {init: false};
+      }
+
+      if (options.init && daterange.extraButton.nullify) {
+        date = new Date();
+      }
+
       var year  = date.getFullYear();
       var month = date.getMonth() + 1;
 
@@ -626,7 +634,12 @@ $.fn.daterangepicker = function(_options) {
 
   $.each(["from", "to"], function(idx, type) {
     if ($(daterange.fields[type]).val() === "") {
-      daterange[type] = new Date();
+      if (daterange.extraButton.nullify) {
+        daterange[type] = dateUtil[ type === "from" ? "minusInfinity" : "Infinity" ];
+      }
+      else {
+        daterange[type] = new Date();
+      }
     }
     else {
       daterange[type] = new Date($(daterange.fields[type]).val());
@@ -654,7 +667,7 @@ $.fn.daterangepicker = function(_options) {
                 .append(
                   $("<div>")
                     .addClass("daterangepicker_widget_calendar_from")
-                    .append(calendar.create(daterange.from, "from"))
+                    .append(calendar.create(daterange.from, "from", {init: true}))
                     .data("daterangeType", "from")
                 )
             )
@@ -665,7 +678,7 @@ $.fn.daterangepicker = function(_options) {
                 .append(
                   $("<div>")
                     .addClass("daterangepicker_widget_calendar_to")
-                    .append(calendar.create(daterange.to, "to"))
+                    .append(calendar.create(daterange.to, "to", {init: true}))
                     .data("daterangeType", "to")
                 )
             )
