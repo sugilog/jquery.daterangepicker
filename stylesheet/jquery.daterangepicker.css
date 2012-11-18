@@ -104,6 +104,8 @@ td.daterangepicker_next_year > a,
 td.daterangepicker_date > a,
 td.daterangepicker_month_select > a,
 td.daterangepicker_preset_item > a,
+td.daterangepicker_fromNull_button > a,
+td.daterangepicker_toNull_button > a,
 td.daterangepicker_close_button > a,
 td.daterangepicker_blank_button > a {
   color: #1e90ff;
@@ -117,6 +119,8 @@ td.daterangepicker_next_year,
 td.daterangepicker_date,
 td.daterangepicker_month_select,
 td.daterangepicker_preset_item,
+td.daterangepicker_fromNull_button,
+td.daterangepicker_toNull_button,
 td.daterangepicker_close_button,
 td.daterangepicker_blank_button {
   cursor: pointer;
@@ -130,18 +134,22 @@ td.daterangepicker_next_year:hover,
 td.daterangepicker_date:hover,
 td.daterangepicker_month_select:hover,
 td.daterangepicker_preset_item:hover,
+td.daterangepicker_fromNull_button:hover,
+td.daterangepicker_toNull_button:hover,
 td.daterangepicker_close_button:hover,
 td.daterangepicker_blank_button:hover,
 /* for IE */
-td.daterangepicker_previous_month a:hover,
-td.daterangepicker_next_month a:hover,
-td.daterangepicker_current_month a:hover,
-td.daterangepicker_previous_year a:hover,
-td.daterangepicker_next_year a:hover,
-td.daterangepicker_date a:hover,
-td.daterangepicker_month_select a:hover,
-td.daterangepicker_preset_item a:hover,
-td.daterangepicker_close_button a:hover,
+td.daterangepicker_previous_month > a:hover,
+td.daterangepicker_next_month > a:hover,
+td.daterangepicker_current_month > a:hover,
+td.daterangepicker_previous_year > a:hover,
+td.daterangepicker_next_year > a:hover,
+td.daterangepicker_date > a:hover,
+td.daterangepicker_month_select > a:hover,
+td.daterangepicker_preset_item > a:hover,
+td.daterangepicker_fromNull_button > a:hover,
+td.daterangepicker_toNull_button > a:hover,
+td.daterangepicker_close_button > a:hover,
 td.daterangepicker_blank_button > a:hover {
   background-color: #add8e6;
   text-decoration: none;
@@ -165,6 +173,8 @@ td.daterangepicker_next_year > a:visited,
 td.daterangepicker_date > a:visited,
 td.daterangepicker_month_select > a:visited,
 td.daterangepicker_preset_item > a:visited,
+td.daterangepicker_fromNull_button > a:visited,
+td.daterangepicker_toNull_button > a:visited,
 td.daterangepicker_close_button > a:visited,
 td.daterangepicker_blank_button > a:visited {
   color: #1e90ff;
@@ -174,12 +184,16 @@ td.current_range {
   background-color: #ffc966;
 }
 td.daterangepicker_preset_item,
+td.daterangepicker_fromNull_button,
+td.daterangepicker_toNull_button,
 td.daterangepicker_close_button,
 td.daterangepicker_blank_button {
   text-align: center;
   border: 1px solid #cccccc;
   height: 20px;
 }
+td.daterangepicker_fromNull_button,
+td.daterangepicker_toNull_button,
 td.daterangepicker_close_button,
 td.daterangepicker_blank_button {
   background-color: #dddddd;

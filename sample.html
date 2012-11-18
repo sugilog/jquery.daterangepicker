@@ -84,8 +84,10 @@
             {label: "今年", range: "2012/01/01-2012/12/31"}
           ],
           extraButton: {
-            blank: "BLANK",
-            close: "CLOSE"
+            blank:    "BLANK",
+            close:    "CLOSE",
+            fromNull: "FROM NULL",
+            toNull:   "TO NULL"
           },
           onPick: function(){
             console.log(this);
@@ -103,6 +105,16 @@
             console.log("onPickBlank");
             console.log(arguments);
             $(this).daterangepickerClose();
+          },
+          onPickFromNull: function(){
+            console.log(this);
+            console.log("onPickFromNull");
+            console.log(arguments);
+          },
+          onPickToNull: function(){
+            console.log(this);
+            console.log("onPickToNull");
+            console.log(arguments);
           }
         });
       });
