@@ -1,5 +1,5 @@
 /*!
- * jquery.daterangepicker v0.1.0
+ * jquery.daterangepicker v0.1.1
  *
  * Copyright (c) 2012 Takayuki Sugita, http://github.com/sugilog
  * Released under the MIT License
@@ -320,11 +320,11 @@ $.fn.daterangepicker = function(_options) {
       }
     },
     ago: function(base, days) {
-      base.setTime(base.getTime() - days * 86400000);
+      base.setDate(base.getDate() - days * 1);
       return base;
     },
     since: function(base, days) {
-      base.setTime(base.getTime() + days * 86400000);
+      base.setDate(base.getDate() + days * 1);
       return base;
     },
     inMonth: function(date, year, month) {
