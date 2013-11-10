@@ -186,6 +186,12 @@ example (using callback):
 
 to know more usage, please see the sample.html and its source
 
+Credits
+------------------------------------------------------------
+- [Takayuki Sugita - sugilog](https://github.com/sugilog)
+- [ecweaver](https://github.com/ecweaver)
+
+
 
 Licence
 ------------------------------------------------------------
