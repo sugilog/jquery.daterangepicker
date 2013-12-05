@@ -631,6 +631,12 @@ $.fn.daterangepicker = function(_options) {
     }
   }
 
+  // make the date be parsed as midnight in the local TZ so it doesn't increment/decrement 
+  var tzo=(new Date()).getTimezoneOffset();
+  var tz_sign = tzo>0 ? '-' : '+';                         // the reverse of the sign of tzo
+  var tzo_hours = ('0' + (Math.floor(tzo/60).toString())).substr(-2,2);
+  var tzo_minutes = ('0' + ((tzo%60).toString())).substr(-2,2);
+  var tz_string = tz_sign+tzo_hours+':'+tzo_minutes;
 
   $.each(["from", "to"], function(idx, type) {
     if ($(daterange.fields[type]).val() === "") {
@@ -642,7 +648,8 @@ $.fn.daterangepicker = function(_options) {
       }
     }
     else {
-      daterange[type] = new Date($(daterange.fields[type]).val());
+      var dt_in = $(daterange.fields[type]).val();
+      daterange[type] = new Date(dt_in + ' 00:00:00 ' + tz_string);
     }
   });
 
