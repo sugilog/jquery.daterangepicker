@@ -385,10 +385,15 @@ $.fn.daterangepicker = function(_options) {
       );
 
       $.each(presetsList, function(idx, preset) {
+        var range, from, to;
+
         if (/([0-9_\/]*)-([0-9_\/]*)/.test(preset.range)) {
-          var range = {
-            from: new Date(RegExp.$1),
-            to:   new Date(RegExp.$2)
+          from = RegExp.$1;
+          to   = RegExp.$2;
+
+          range = {
+            from: (from && from !== "") ? new Date(RegExp.$1) : undefined,
+            to:   (to   && to !== "")   ? new Date(RegExp.$2) : undefined
           }
 
           tbody.append(
