@@ -384,6 +384,7 @@ $.fn.daterangepicker = function(_options) {
           .append($("<td>").text("presets"))
       );
 
+      var innerTable = $("<table>").addClass("daterangepicker_preset_item_list");
       $.each(presetsList, function(idx, preset) {
         var range, from, to;
 
@@ -396,7 +397,7 @@ $.fn.daterangepicker = function(_options) {
             to:   (to   && to !== "")   ? new Date(RegExp.$2) : undefined
           }
 
-          tbody.append(
+          innerTable.append(
             $("<tr>").append(
               $("<td>").addClass("daterangepicker_preset_item")
                 .append(
@@ -411,7 +412,27 @@ $.fn.daterangepicker = function(_options) {
         }
       });
 
+      tbody.append(
+        $("<tr>").append(
+          $("<td>").addClass("daterangepicker_preset_item_wrapper").append(
+            $("<div>").addClass("daterangepicker_preset_item_list").append(innerTable)
+          )
+        )
+      );
       return $("<table>").addClass("daterangepicker_preset").append(tbody);
+    },
+    adjust: function() {
+      var target = $("div.daterangepicker_preset_item_list");
+      var height = Math.max.apply(
+        Math,
+        $("table.daterangepicker_calendar").map(function() {
+          var _height = $(this).height(),
+              _rows   = $(this).find("tr").length;
+          console.log(_height, _rows);
+          return (_height / _rows) * (_rows - 1);
+        }).toArray()
+      );
+      target.css({height: height});
     }
   };
 
@@ -727,6 +748,7 @@ $.fn.daterangepicker = function(_options) {
             )
         )
     );
+  presets.adjust();
   calendar.setCurrent(daterange.from, "from");
   calendar.setCurrent(daterange.to, "to");
   calendar.setRange();

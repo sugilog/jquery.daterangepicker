@@ -21,6 +21,9 @@ td.daterangepicker_widget_extra {
   width: 100px;
   border: none;
 }
+td.daterangepicker_preset_item_wrapper {
+  padding: 0px;
+}
 table.daterangepicker_calendar,
 table.daterangepicker_preset,
 table.daterangepicker_extra_item {
@@ -35,8 +38,13 @@ table.daterangepicker_extra_item {
   background-color: #ffffff;
 }
 table.daterangepicker_preset,
+div.daterangepicker_preset_item_list,
+table.daterangepicker_preset_item_list,
 table.daterangepicker_extra_item {
   width: 100%;
+}
+div.daterangepicker_preset_item_list {
+  overflow-y: auto;
 }
 tr.daterangepicker_month,
 tr.daterangepicker_year,
