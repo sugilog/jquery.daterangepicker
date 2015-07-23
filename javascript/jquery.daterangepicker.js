@@ -67,6 +67,7 @@ $.fn.daterangepicker = function(_options) {
   daterange.fields.from = _options.daterangeFrom || daterange.fields.from;
   daterange.fields.to   = _options.daterangeTo   || daterange.fields.to;
   daterange.extraButton.nullify = daterange.extraButton.fromNull || daterange.extraButton.toNull;
+  daterange.extraButton.optional = daterange.extraButton.blank || daterange.extraButton.close;
 
   daterange.wrapFields = function(){
     return $(_this).find([daterange.fields.from, daterange.fields.to].join(",")).length === 2;
@@ -428,7 +429,6 @@ $.fn.daterangepicker = function(_options) {
         $("table.daterangepicker_calendar").map(function() {
           var _height = $(this).height(),
               _rows   = $(this).find("tr").length;
-          console.log(_height, _rows);
           return (_height / _rows) * (_rows - 1);
         }).toArray()
       );
@@ -723,29 +723,33 @@ $.fn.daterangepicker = function(_options) {
             )
         )
         .append(
-          $("<tr>")
-            .append(
-              !daterange.extraButton.nullify ? null : (
-                $("<td>")
-                  .css({verticalAlign: "bottom", height: "100%"})
-                  .addClass("daterangepicker_widget_extra")
-                  .append(extraButton.create(["fromNull"]))
+          (daterange.extraButton.nullify || daterange.extraButton.optional) ? (
+            $("<tr>")
+              .append(
+                !daterange.extraButton.nullify ? null : (
+                  $("<td>")
+                    .css({verticalAlign: "bottom", height: "100%"})
+                    .addClass("daterangepicker_widget_extra")
+                    .append(extraButton.create(["fromNull"]))
+                )
               )
-            )
-            .append(
-              !daterange.extraButton.nullify ? null : (
-                $("<td>")
-                  .css({verticalAlign: "bottom", height: "100%"})
-                  .addClass("daterangepicker_widget_extra")
-                  .append(extraButton.create(["toNull"]))
+              .append(
+                !daterange.extraButton.nullify ? null : (
+                  $("<td>")
+                    .css({verticalAlign: "bottom", height: "100%"})
+                    .addClass("daterangepicker_widget_extra")
+                    .append(extraButton.create(["toNull"]))
+                )
               )
-            )
-            .append(
-              $("<td>")
-                .css({verticalAlign: "bottom", height: "100%"})
-                .addClass("daterangepicker_widget_extra")
-                .append(extraButton.create(["blank", "close"]))
-            )
+              .append(
+                !daterange.extraButton.optional ? null : (
+                  $("<td>")
+                    .css({verticalAlign: "bottom", height: "100%"})
+                    .addClass("daterangepicker_widget_extra")
+                    .append(extraButton.create(["blank", "close"]))
+                )
+              )
+          ) : null
         )
     );
   presets.adjust();
