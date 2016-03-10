@@ -484,7 +484,7 @@ $.fn.daterangepicker = function(_options) {
     },
     open: function() {
       // Set Events For Date
-	$(document).on("click.daterangepicker", this.target.date, function() {
+      $(document).on("click.daterangepicker", this.target.date, function() {
         var type = $(this).data().daterangeType;
         var date = dateUtil.init($(this).data().daterangeDate);
         $(daterange.fields[type]).val(dateUtil.format(date));
@@ -658,14 +658,17 @@ $.fn.daterangepicker = function(_options) {
   }
 
   // make the date be parsed as midnight in the local TZ so it doesn't increment/decrement 
-  var tzo=(new Date()).getTimezoneOffset();
-  var tz_sign = tzo>0 ? '-' : '+';                         // the reverse of the sign of tzo
-  var tzo_hours = ('0' + (Math.floor(tzo/60).toString())).substr(-2,2);
-  var tzo_minutes = ('0' + ((tzo%60).toString())).substr(-2,2);
-  var tz_string = tz_sign+tzo_hours+':'+tzo_minutes;
+  var timezone = {}
+  timezone.offset = new Date().getTimezoneOffset();
+  timezone.sign   = timezone.offset > 0 ? "-" : "+";
+  timezone.hour   = ( "0" + Math.floor( Math.abs( timezone.offset ) / 60 ) ).substr( -2, 2 );
+  timezone.minute = ( "0" + ( Math.abs( timezone.offset ) % 60 ) ).substr( -2, 2 );
+  timezone.string = [ timezone.sign, timezone.hour, ":", timezone.minute ].join( "" );
 
   $.each(["from", "to"], function(idx, type) {
-    if ($(daterange.fields[type]).val() === "") {
+    var inputDate = $( daterange.fields[type] ).val();
+
+    if ( inputDate === "" ) {
       if (daterange.extraButton.nullify) {
         daterange[type] = dateUtil[ type === "from" ? "minusInfinity" : "Infinity" ];
       }
@@ -674,8 +677,7 @@ $.fn.daterangepicker = function(_options) {
       }
     }
     else {
-      var dt_in = $(daterange.fields[type]).val();
-      daterange[type] = new Date(dt_in + ' 00:00:00 ' + tz_string);
+      daterange[type] = new Date( inputDate + ' 00:00:00 ' + timezone.string );
     }
   });
 
