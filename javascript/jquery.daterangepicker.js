@@ -475,7 +475,7 @@ $.fn.daterangepicker = function(_options) {
     },
     close: function() {
       $.each(this.target, function(_, selector) {
-          $(document).off(selector, "click.daterangepicker");
+        $(document).off("click.daterangepicker", selector);
       });
 
       $.each(["from", "to"], function(_, type) {
