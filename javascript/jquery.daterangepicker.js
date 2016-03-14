@@ -664,6 +664,18 @@ $.fn.daterangepicker = function(_options) {
   timezone.hour   = ( "0" + Math.floor( Math.abs( timezone.offset ) / 60 ) ).substr( -2, 2 );
   timezone.minute = ( "0" + ( Math.abs( timezone.offset ) % 60 ) ).substr( -2, 2 );
   timezone.string = [ timezone.sign, timezone.hour, ":", timezone.minute ].join( "" );
+  timezone.newDate = function( dateString, forceReturn ) {
+    var invalidpattern = /^invalid/i,
+        date = new Date( [ dateString, "00:00:00", timezone.string ].join( " " ) );
+
+    if ( !forceReturn && invalidpattern.test( date.toString() ) ) {
+      timezone.string = timezone.string.replace(":", "");
+      return timezone.newDate( dateString, true )
+    }
+    else {
+      return date;
+    }
+  }
 
   $.each(["from", "to"], function(idx, type) {
     var inputDate = $( daterange.fields[type] ).val();
@@ -677,7 +689,7 @@ $.fn.daterangepicker = function(_options) {
       }
     }
     else {
-      daterange[type] = new Date( inputDate + ' 00:00:00 ' + timezone.string );
+      daterange[type] = timezone.newDate( inputDate );
     }
   });
 
